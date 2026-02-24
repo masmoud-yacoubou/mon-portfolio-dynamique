@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "works": "Portfolio",
+    "about": "À propos",
+    "contact": "Contact",
+    "skills": "Mon Stack",
+    "experience": "Expérience"
+  },
+  "hero": {
+    "title": "DÉVELOPPEUR FULL-STACK",
+    "subtitle": "Spécialisé dans la conception de solutions performantes et d'écosystèmes numériques robustes, je transforme des architectures complexes en produits fonctionnels et centrés sur l'utilisateur.",
+    "cta": "Découvrir mon portfolio",
+    "status": "Disponible pour de nouveaux projets",
+    "badge": "Passionné de Tech"
+  },
+  "sections": {
+    "projects_subtitle": "Une sélection de mes réalisations les plus récentes.",
+    "skills_subtitle": "Maîtrise des technologies modernes pour bâtir des solutions robustes et évolutives.",
+    "skills_title_accent": "Technologique",
+    "exp_subtitle": "Mon cheminement professionnel à travers différents défis techniques.",
+    "exp_title_accent": "Professionnelle"
+  },
+  "projects": {
+    "view_project": "Voir le projet",
+    "count_label": "Projets",
+    "confidential": "Projet Interne / Confidentiel"
+  },
+  "contact": {
+    "title": "TRAVAILLONS ENSEMBLE",
+    "button": "Envoyer un message",
+    "copy": "Basé à Cotonou, Bénin, disponible pour des opportunités en remote ou sur site.",
+    "footer_sub": "Développeur Full-Stack",
+    "availability": "Prêt pour le prochain défi"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "works": "Portfolio",
+    "about": "About",
+    "contact": "Contact",
+    "skills": "My Stack",
+    "experience": "Experience"
+  },
+  "hero": {
+    "title": "FULL-STACK DEVELOPER",
+    "subtitle": "Specializing in the design of high-performance solutions and robust digital ecosystems, I transform complex architectures into functional, user-centric products.",
+    "cta": "Explore my portfolio",
+    "status": "Available for new projects",
+    "badge": "Tech Passionate"
+  },
+  "sections": {
+    "projects_subtitle": "A curated selection of my most recent works.",
+    "skills_subtitle": "Mastering modern technologies to build robust and scalable solutions.",
+    "skills_title_accent": "Technological",
+    "exp_subtitle": "My professional journey through various technical challenges.",
+    "exp_title_accent": "Professional"
+  },
+  "projects": {
+    "view_project": "View Project",
+    "count_label": "Projects",
+    "confidential": "Internal Project / Confidential"
+  },
+  "contact": {
+    "title": "LET'S WORK TOGETHER",
+    "button": "Send a message",
+    "copy": "Based in Cotonou, Benin, available for remote or on-site opportunities.",
+    "footer_sub": "Full-Stack Dev",
+    "availability": "Ready for the next challenge"
+  }
+}

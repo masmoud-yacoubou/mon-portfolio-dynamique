@@ -1,26 +1,95 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-sans: var(--font-poppins);
+  --font-heading: var(--font-montserrat);
+  
+  --color-accent: #3b82f6;
+  --color-night: #050505;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply transition-colors duration-500;
+}
+
+/* Effet de grain subtil pour le côté Premium */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  z-index: 50;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-montserrat);
+}
+/* --- EFFETS DE TEXTE (OPTIONNEL) --- */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-400;
+}
+
+/* --- CORRECTION POUR PORTABLE TEXT (PROSE) --- */
+/* Pour que tes descriptions Sanity respectent le mode sombre */
+.prose {
+  @apply max-w-none text-slate-600 dark:text-slate-400;
+}
+
+.prose strong {
+  @apply text-slate-900 dark:text-white font-bold;
+}
+
+/* --- PERSONNALISATION DE LA BARRE DE DÉFILEMENT --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-blue-500 transition-colors;
+}
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-poppins);
+  --font-heading: var(--font-montserrat);
+  --color-brand: #3b82f6;
+}
+
+body {
+  @apply bg-white dark:bg-[#020202] transition-colors duration-700;
+}
+
+/* Animation de l'Aura en arrière-plan */
+.bg-aura {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100vw; height: 100vh;
+  background: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.08), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+@layer base {
+  html {
+    /* Défilement doux pour tout le site */
+    scroll-behavior: smooth;
+  }
+
+  /* Ajustement pour la Navbar fixe */
+  /* Empêche le titre de la section d'être caché sous la Navbar */
+  section[id] {
+    scroll-margin-top: 100px;
+  }
 }
