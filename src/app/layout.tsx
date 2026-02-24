@@ -46,6 +46,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning>
       <body suppressHydrationWarning className="antialiased">
         {children}
+        <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Masmoud Yacoubou",
+      "jobTitle": "Développeur Full-Stack",
+      "url": "https://dev-masmoud-yacoubou.vercel.app",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Cotonou",
+        "addressCountry": "BJ"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/masmoud-yacoubou",
+        "https://github.com/masmoud-yacoubou"
+      ]
+    })
+  }}
+/>
       </body>
     </html>
   );

@@ -1,0 +1,13 @@
+// src/app/robots.txt
+import { MetadataRoute } from 'next'
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: '/studio/', // On cache l'admin Sanity de Google
+    },
+    sitemap: 'https://dev-masmoud-yacoubou.vercel.app/sitemap.xml',
+  }
+}
