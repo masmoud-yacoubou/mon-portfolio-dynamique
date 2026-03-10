@@ -1,5 +1,9 @@
 import { defineField, defineType } from 'sanity'
 
+// Pensez à ajouyer dans ce fichier un champ pour recevoir les liens des différents projects
+// Un lien live pour visionner le site et qui sera optionnel
+// Un lien github optionnel dans les cas où il y a un dépôt github 
+
 export default defineType({
   name: 'project',
   title: 'Projets',

@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  title          String
+  title_en       String?
+  description    String
+  description_en String?
+  imageUrl       String?
+  link           String?
+  githubUrl      String?
+  slug           String   @unique
+  technologies   String[]
+  featured       Boolean  @default(false)
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("projects")
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String
+  level     Int
+  category  String
+  iconUrl   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("skills")
+}
+
+model Experience {
+  id             String    @id @default(cuid())
+  role           String
+  role_en        String?
+  description    String
+  description_en String?
+  company        String
+  startDate      DateTime
+  endDate        DateTime?
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("experiences")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("messages")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
