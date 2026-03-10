@@ -4,12 +4,6 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
-        port: '',
-        pathname: '/**',
-      },
-      {
         // ← Ajouter Cloudinary
         protocol: "https",
         hostname: "res.cloudinary.com",

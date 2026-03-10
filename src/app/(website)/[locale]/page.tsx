@@ -1,6 +1,11 @@
 // src/app/(website)/[locale]/page.tsx
-import { client } from "@/sanity/lib/client";
-import { PROJECTS_QUERY, SKILLS_QUERY, EXPERIENCES_QUERY } from "@/sanity/lib/queries";
+// =============================================================================
+// PAGE D'ACCUEIL - Portfolio Public
+// Description : Charge les données depuis Prisma (remplace Sanity).
+//               Rendu côté serveur (SSR) pour le SEO.
+// =============================================================================
+
+import prisma from "@/lib/prisma";
 import HomeClient from "@/components/HomeClient";
 import { getDictionary } from "@/dictionaries/get-dictionary";
 
@@ -8,28 +13,45 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export default async function Page({ params }: Props) {
-  // On attend la résolution des paramètres de la route (Next.js 15+)
-  const { locale } = await params;
-  
-  // Sécurité pour la locale (fallback sur 'fr')
-  const activeLocale = (locale === 'en' || locale === 'fr') ? locale : 'fr';
+/**
+ * Récupère toutes les données du portfolio depuis Neon
+ */
+async function getPortfolioData() {
+  const [projects, skills, experiences] = await Promise.all([
+    prisma.project.findMany({
+      orderBy: { order: "asc" },
+    }),
+    prisma.skill.findMany({
+      orderBy: { order: "asc" },
+    }),
+    prisma.experience.findMany({
+      orderBy: { order: "asc" },
+    }),
+  ]);
 
-  // Chargement parallèle des données Sanity et du dictionnaire local
-  const [projects, skills, experiences, dict] = await Promise.all([
-    client.fetch(PROJECTS_QUERY, { locale: activeLocale }),
-    client.fetch(SKILLS_QUERY, { locale: activeLocale }),
-    client.fetch(EXPERIENCES_QUERY, { locale: activeLocale }),
+  return { projects, skills, experiences };
+}
+
+export default async function Page({ params }: Props) {
+  // Résolution des paramètres de route (Next.js 15+)
+  const { locale } = await params;
+
+  // Sécurité locale (fallback sur 'fr')
+  const activeLocale = (locale === "en" || locale === "fr") ? locale : "fr";
+
+  // Chargement parallèle des données Prisma et du dictionnaire
+  const [{ projects, skills, experiences }, dict] = await Promise.all([
+    getPortfolioData(),
     getDictionary(activeLocale),
   ]);
 
   return (
-    <HomeClient 
-      projects={projects} 
-      skills={skills} 
-      experiences={experiences} 
-      activeLocale={activeLocale} 
-      dict={dict} 
+    <HomeClient
+      projects={projects}
+      skills={skills}
+      experiences={experiences}
+      activeLocale={activeLocale}
+      dict={dict}
     />
   );
 }

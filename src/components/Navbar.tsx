@@ -73,10 +73,11 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { name: isEn ? 'Portfolio' : 'Portfolio', href: '#works' },
-    { name: isEn ? 'Stack' : 'Stack', href: '#skills' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  { name: isEn ? "Portfolio" : "Portfolio", href: "#works"       },
+  { name: isEn ? "Stack"     : "Stack",     href: "#skills"      },
+  { name: isEn ? "Experience": "Expérience",href: "#experience"  }, 
+  { name: "Contact",                         href: "#contact"     },
+];
 
   return (
     <header className="fixed top-0 w-full z-[100] transition-all duration-500 px-4 py-4 pointer-events-none">
