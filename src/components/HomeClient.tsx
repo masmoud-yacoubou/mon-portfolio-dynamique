@@ -1,7 +1,7 @@
 // src/components/HomeClient.tsx
 // =============================================================================
 // COMPOSANT CLIENT - Page d'accueil Portfolio
-// Direction : Studio / Agence — sophistiqué, détails fins
+// Direction : Premium épuré — moins d'uppercase, responsive first
 // =============================================================================
 
 "use client";
@@ -39,11 +39,11 @@ interface HomeClientProps {
 // =============================================================================
 
 const fadeInUp: Variants = {
-  hidden:  { opacity: 0, y: 24 },
+  hidden:  { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -51,7 +51,7 @@ const stagger: Variants = {
   hidden:  { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
   },
 };
 
@@ -60,9 +60,9 @@ const stagger: Variants = {
 // =============================================================================
 
 const socialLinks = [
-  { name: "Github",   href: "https://github.com/masmoud-yacoubou",          icon: <Github        size={18} /> },
-  { name: "LinkedIn", href: "https://www.linkedin.com/in/masmoud-yacoubou", icon: <Linkedin      size={18} /> },
-  { name: "Whatsapp", href: "https://wa.me/22969724172",                    icon: <MessageCircle size={18} /> },
+  { name: "Github",    href: "https://github.com/masmoud-yacoubou",          icon: <Github        size={18} /> },
+  { name: "LinkedIn",  href: "https://www.linkedin.com/in/masmoud-yacoubou", icon: <Linkedin      size={18} /> },
+  { name: "Whatsapp",  href: "https://wa.me/22969724172",                    icon: <MessageCircle size={18} /> },
 ];
 
 // =============================================================================
@@ -79,48 +79,44 @@ export default function HomeClient({
   const isEn = activeLocale === "en";
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#060606] text-black dark:text-white selection:bg-blue-600 selection:text-white">
+    <main className="min-h-screen bg-white dark:bg-[#080808] text-black dark:text-white selection:bg-blue-600 selection:text-white">
 
       {/* ================================================================== */}
       {/* HERO                                                                */}
       {/* ================================================================== */}
-      <section className="relative min-h-screen flex flex-col justify-center px-6 lg:px-20 pt-28 pb-20">
-
-        {/* Ligne décorative verticale gauche */}
-        <div className="absolute left-6 lg:left-20 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-600/20 to-transparent pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <section className="relative min-h-screen flex items-center px-5 sm:px-8 lg:px-16 pt-24 pb-16">
+        <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           {/* Texte */}
           <motion.div
             variants={stagger}
             initial="hidden"
             animate="visible"
-            className="lg:col-span-7 order-2 lg:order-1 text-center lg:text-left"
+            className="order-2 lg:order-1"
           >
-            {/* Badge disponibilité */}
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 mb-10">
-              <span className="relative flex h-2 w-2">
+            {/* Statut */}
+            <motion.div variants={fadeInUp} className="flex items-center gap-2.5 mb-8">
+              <span className="relative flex h-2 w-2 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+              <span className="text-xs font-semibold text-blue-600 tracking-wide">
                 {dict?.hero?.status}
               </span>
             </motion.div>
 
-            {/* Titre principal */}
+            {/* Titre */}
             <motion.h1
               variants={fadeInUp}
-              className="font-montserrat text-5xl sm:text-7xl lg:text-[5.5rem] font-black uppercase leading-[1.0] tracking-tighter mb-8"
+              className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black uppercase leading-[1.05] tracking-tighter mb-6"
             >
               {dict?.hero?.title}
             </motion.h1>
 
-            {/* Ligne séparatrice */}
-            <motion.div variants={fadeInUp} className="flex items-center justify-center lg:justify-start gap-6 mb-8">
-              <div className="h-[1px] w-12 bg-blue-600" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-zinc-500">
+            {/* Séparateur */}
+            <motion.div variants={fadeInUp} className="flex items-center gap-4 mb-6">
+              <div className="h-px w-8 bg-blue-600 flex-shrink-0" />
+              <span className="text-xs font-medium text-slate-400 dark:text-zinc-500 tracking-wide">
                 {dict?.nav?.about ?? "Full-Stack Developer"}
               </span>
             </motion.div>
@@ -128,53 +124,52 @@ export default function HomeClient({
             {/* Sous-titre */}
             <motion.p
               variants={fadeInUp}
-              className="text-base text-slate-500 dark:text-zinc-400 max-w-md mx-auto lg:mx-0 mb-12 leading-relaxed font-medium"
+              className="text-sm sm:text-base text-slate-500 dark:text-zinc-400 max-w-lg mb-10 leading-relaxed"
             >
               {dict?.hero?.subtitle}
             </motion.p>
 
             {/* CTA */}
-            <motion.div variants={fadeInUp} className="flex items-center justify-center lg:justify-start gap-6 flex-wrap">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4">
               <a
                 href="#works"
-                className="group relative inline-flex items-center gap-4 bg-blue-600 text-white px-8 py-4 font-montserrat font-black uppercase tracking-widest text-[10px] overflow-hidden transition-all duration-300"
+                className="group relative inline-flex items-center gap-3 bg-blue-600 text-white px-7 py-3.5 text-xs font-bold tracking-wide overflow-hidden transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out" />
                 <span className="relative z-10">{dict?.hero?.cta}</span>
-                <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300 text-sm">→</span>
               </a>
               <a
                 href="#contact"
-                className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-blue-500 transition-colors border-b border-transparent hover:border-blue-600 pb-0.5"
+                className="text-xs font-semibold text-slate-400 dark:text-zinc-500 hover:text-blue-600 transition-colors border-b border-transparent hover:border-blue-600 pb-px"
               >
                 {dict?.nav?.contact}
               </a>
             </motion.div>
           </motion.div>
 
-          {/* Photo — style rond */}
+          {/* Photo ronde */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "circOut" }}
-            className="lg:col-span-5 order-1 lg:order-2 flex justify-center"
+            className="order-1 lg:order-2 flex justify-center lg:justify-end"
           >
-            <div className="relative group scale-90 sm:scale-100">
-
-              {/* Cercles décoratifs rotatifs */}
+            <div className="relative group">
+              {/* Cercles rotatifs */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-6 border-t border-blue-600/30 rounded-full hidden sm:block"
+                transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                className="absolute -inset-5 border border-blue-600/20 rounded-full hidden sm:block"
               />
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-3 border-l border-blue-600/20 rounded-full hidden sm:block"
+                className="absolute -inset-2.5 border border-blue-600/10 rounded-full hidden sm:block"
               />
 
-              {/* Photo ronde */}
-              <div className="w-56 h-56 sm:w-80 sm:h-80 lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden border-[8px] sm:border-[12px] border-slate-50 dark:border-zinc-900 shadow-2xl relative z-10">
+              {/* Photo */}
+              <div className="w-52 h-52 sm:w-72 sm:h-72 lg:w-[340px] lg:h-[340px] rounded-full overflow-hidden border-[6px] sm:border-[10px] border-white dark:border-zinc-900 shadow-2xl relative z-10">
                 <Image
                   src="/photo.png"
                   alt="Masmoud Yacoubou"
@@ -184,16 +179,16 @@ export default function HomeClient({
                 />
               </div>
 
-              {/* Badge localisation flottant */}
+              {/* Badge flottant */}
               <motion.div
-                animate={{ y: [0, -10, 0] }}
+                animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 shadow-xl z-20"
+                className="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 bg-white dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-2.5 shadow-lg z-20"
               >
-                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-blue-600 mb-0.5">
+                <p className="text-[10px] font-bold text-blue-600 mb-0.5 tracking-wide">
                   {dict?.hero?.badge}
-                </div>
-                <div className="text-[10px] font-black uppercase tracking-wider">Cotonou, BJ</div>
+                </p>
+                <p className="text-xs font-black">Cotonou, BJ</p>
               </motion.div>
             </div>
           </motion.div>
@@ -203,14 +198,14 @@ export default function HomeClient({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          transition={{ delay: 2 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
         >
-          <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-300 dark:text-zinc-700">Scroll</span>
+          <span className="text-[9px] font-medium text-slate-300 dark:text-zinc-700 tracking-widest uppercase">scroll</span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
+            animate={{ y: [0, 5, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-[1px] h-8 bg-gradient-to-b from-blue-600 to-transparent"
+            className="w-px h-7 bg-gradient-to-b from-blue-600/60 to-transparent"
           />
         </motion.div>
       </section>
@@ -218,41 +213,39 @@ export default function HomeClient({
       {/* ================================================================== */}
       {/* PROJETS                                                             */}
       {/* ================================================================== */}
-      <section id="works" className="py-32 px-6 lg:px-20 border-t border-slate-100 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto">
+      <section id="works" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
+        <div className="max-w-6xl mx-auto">
 
-          {/* En-tête section */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-20">
+          {/* En-tête */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4">
-                — {dict?.projects?.count_label}
+              <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+                {dict?.projects?.count_label}
               </p>
-              <h2 className="font-montserrat text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none">
+              <h2 className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-none">
                 {dict?.nav?.works}
               </h2>
             </div>
-            <div className="font-montserrat text-[80px] sm:text-[100px] font-black text-slate-50 dark:text-zinc-900 leading-none select-none">
+            <span className="font-montserrat text-6xl sm:text-8xl font-black text-slate-50 dark:text-zinc-900 leading-none select-none self-end">
               {(projects?.length ?? 0).toString().padStart(2, "0")}
-            </div>
+            </span>
           </div>
 
-          {/* Grille projets */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+          {/* Grille */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12">
             {projects?.map((project, index) => (
               <motion.article
                 key={project.id}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="group"
               >
                 {/* Image */}
                 <Link href={`/${activeLocale}/project/${project.slug}`}>
-                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-zinc-900 mb-8">
-
-                    {/* Numéro */}
-                    <div className="absolute top-4 left-4 z-10 font-montserrat text-[10px] font-black text-white/70 bg-black/40 backdrop-blur-sm px-2 py-1">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-zinc-900 mb-5">
+                    <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-white/60 bg-black/30 backdrop-blur-sm px-2 py-0.5">
                       {(index + 1).toString().padStart(2, "0")}
                     </div>
 
@@ -262,55 +255,49 @@ export default function HomeClient({
                         alt={project.title}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, 50vw"
+                        sizes="(max-width: 640px) 100vw, 50vw"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-montserrat text-6xl font-black text-slate-200 dark:text-zinc-800 uppercase">
+                        <span className="font-montserrat text-5xl font-black text-slate-200 dark:text-zinc-800 uppercase">
                           {project.title.charAt(0)}
                         </span>
                       </div>
                     )}
 
-                    {/* Overlay hover */}
-                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/10 transition-all duration-500" />
-
-                    {/* Bouton centré au hover */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <div className="bg-white dark:bg-black text-black dark:text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="bg-white text-black text-[10px] font-bold tracking-wide px-5 py-2.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                         {dict?.projects?.view_project} →
-                      </div>
+                      </span>
                     </div>
                   </div>
                 </Link>
 
                 {/* Infos */}
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-2 mb-3">
+                    <div className="flex flex-wrap gap-1.5 mb-2">
                       {project.technologies?.slice(0, 3).map((tech) => (
                         <span
                           key={tech}
-                          className="text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-600 border border-slate-200 dark:border-zinc-800 px-2 py-1"
+                          className="text-[10px] text-slate-400 dark:text-zinc-600 border border-slate-200 dark:border-zinc-800 px-2 py-0.5"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
-
-                    {/* Titre */}
-                    <h3 className="font-montserrat text-xl sm:text-2xl font-black uppercase tracking-tight group-hover:text-blue-600 transition-colors duration-300 truncate">
+                    <h3 className="font-montserrat text-lg sm:text-xl font-black uppercase tracking-tight group-hover:text-blue-600 transition-colors duration-300 truncate">
                       {isEn && project.title_en ? project.title_en : project.title}
                     </h3>
                   </div>
 
-                  {/* Flèche */}
                   <Link
                     href={`/${activeLocale}/project/${project.slug}`}
-                    className="flex-shrink-0 w-10 h-10 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-400 group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300"
+                    className="flex-shrink-0 w-9 h-9 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all duration-300"
                   >
-                    <span className="text-sm group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform inline-block">↗</span>
+                    <span className="text-sm">↗</span>
                   </Link>
                 </div>
               </motion.article>
@@ -322,53 +309,53 @@ export default function HomeClient({
       {/* ================================================================== */}
       {/* SKILLS                                                              */}
       {/* ================================================================== */}
-      <section id="skills" className="py-32 px-6 lg:px-20 bg-[#060606] text-white">
-        <div className="max-w-7xl mx-auto">
+      <section id="skills" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 bg-[#080808] text-white">
+        <div className="max-w-6xl mx-auto">
 
           {/* En-tête */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20 border-b border-white/5 pb-12">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16 pb-10 border-b border-white/5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4">
-                — {dict?.nav?.skills}
+              <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+                {dict?.nav?.skills}
               </p>
-              <h2 className="font-montserrat text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none">
+              <h2 className="font-montserrat text-4xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
                 {dict?.sections?.skills_title_accent}
               </h2>
             </div>
-            <p className="text-sm text-zinc-500 max-w-sm leading-relaxed font-medium lg:text-right">
+            <p className="text-sm text-zinc-500 max-w-xs leading-relaxed lg:text-right">
               {dict?.sections?.skills_subtitle}
             </p>
           </div>
 
-          {/* Grille skills */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5">
+          {/* Grille */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.04]">
             {skills?.map((skill, index) => (
               <motion.div
                 key={skill.id}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05, duration: 0.5 }}
-                className="group bg-[#060606] p-8 hover:bg-white/[0.03] transition-colors duration-300"
+                transition={{ delay: index * 0.04, duration: 0.5 }}
+                className="group bg-[#080808] p-6 sm:p-8 hover:bg-white/[0.03] transition-colors duration-300"
               >
-                {/* Header skill */}
-                <div className="flex items-start justify-between mb-8">
-                  <div className="flex items-center gap-3">
+                {/* Nom + niveau */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2.5">
                     {skill.iconUrl && (
-                      <div className="relative w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity">
+                      <div className="relative w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity flex-shrink-0">
                         <Image src={skill.iconUrl} alt={skill.name} fill className="object-contain" />
                       </div>
                     )}
-                    <span className="font-montserrat text-sm font-black uppercase tracking-tight group-hover:text-blue-400 transition-colors">
+                    <span className="text-sm font-semibold group-hover:text-blue-400 transition-colors">
                       {skill.name}
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-blue-600 font-bold tabular-nums">
+                  <span className="font-mono text-[10px] text-blue-600 font-bold">
                     {skill.level}%
                   </span>
                 </div>
 
-                {/* Barre de progression — segments animés */}
+                {/* Segments */}
                 <div className="flex gap-1">
                   {[...Array(10)].map((_, i) => (
                     <motion.div
@@ -376,11 +363,11 @@ export default function HomeClient({
                       initial={{ scaleY: 0 }}
                       whileInView={{ scaleY: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 + i * 0.04, duration: 0.3 }}
+                      transition={{ delay: index * 0.04 + i * 0.03, duration: 0.25 }}
                       style={{ originY: 1 }}
-                      className={`h-1 flex-1 transition-colors duration-300 ${
+                      className={`h-0.5 flex-1 ${
                         i < Math.round(skill.level / 10)
-                          ? "bg-blue-600 group-hover:bg-blue-500"
+                          ? "bg-blue-600"
                           : "bg-white/10"
                       }`}
                     />
@@ -395,67 +382,66 @@ export default function HomeClient({
       {/* ================================================================== */}
       {/* EXPÉRIENCES                                                         */}
       {/* ================================================================== */}
-      <section id="experience" className="py-32 px-6 lg:px-20 border-t border-slate-100 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto">
+      <section id="experience" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
+        <div className="max-w-6xl mx-auto">
 
           {/* En-tête */}
-          <div className="mb-20">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4">
-              — {dict?.nav?.experience}
+          <div className="mb-16">
+            <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+              {dict?.nav?.experience}
             </p>
-            <h2 className="font-montserrat text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none">
+            <h2 className="font-montserrat text-4xl sm:text-5xl font-black uppercase tracking-tighter leading-none mb-3">
               {dict?.sections?.exp_title_accent}
             </h2>
-            <p className="text-slate-400 text-[10px] font-bold mt-4 uppercase tracking-[0.4em]">
+            <p className="text-sm text-slate-400 dark:text-zinc-600">
               {dict?.sections?.exp_subtitle}
             </p>
           </div>
 
           {/* Timeline */}
           <div className="relative">
-            {/* Ligne verticale */}
-            <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-slate-100 dark:bg-zinc-900 hidden md:block" />
+            <div className="absolute left-0 top-0 bottom-0 w-px bg-slate-100 dark:bg-zinc-900 hidden md:block" />
 
             <div className="divide-y divide-slate-100 dark:divide-zinc-900">
               {experiences?.map((exp, index) => (
                 <motion.div
                   key={exp.id}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
-                  className="group grid grid-cols-1 md:grid-cols-12 gap-6 py-12 md:pl-12 relative"
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+                  className="group grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-10 md:pl-10 relative"
                 >
                   {/* Point timeline */}
-                  <div className="absolute left-[-4px] top-14 w-2 h-2 bg-white dark:bg-[#060606] border-2 border-blue-600 hidden md:block group-hover:bg-blue-600 transition-colors duration-300" />
+                  <div className="absolute left-[-3.5px] top-12 w-1.5 h-1.5 bg-white dark:bg-[#080808] border-2 border-blue-600 hidden md:block group-hover:bg-blue-600 transition-colors duration-300 rounded-full" />
 
                   {/* Période */}
                   <div className="md:col-span-2">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+                    <span className="text-xs font-bold text-blue-600">
                       {new Date(exp.startDate).getFullYear()}
                     </span>
-                    <div className="text-[10px] font-black text-slate-300 dark:text-zinc-700 uppercase tracking-widest">
+                    <p className="text-xs text-slate-300 dark:text-zinc-700 mt-0.5">
                       — {exp.endDate
                           ? new Date(exp.endDate).getFullYear()
                           : (isEn ? "Present" : "Présent")}
-                    </div>
+                    </p>
                   </div>
 
-                  {/* Rôle + Entreprise */}
+                  {/* Rôle */}
                   <div className="md:col-span-4">
-                    <h3 className="font-montserrat text-xl font-black uppercase tracking-tight mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                    <h3 className="font-montserrat text-lg font-black uppercase tracking-tight mb-1.5 group-hover:text-blue-600 transition-colors duration-300">
                       {isEn && exp.role_en ? exp.role_en : exp.role}
                     </h3>
-                    <div className="inline-flex items-center gap-2">
-                      <div className="w-3 h-[1px] bg-blue-600" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-500">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-px bg-blue-600 flex-shrink-0" />
+                      <span className="text-xs font-medium text-slate-400 dark:text-zinc-500">
                         {exp.company}
                       </span>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <div className="md:col-span-6 text-sm text-slate-500 dark:text-zinc-400 leading-relaxed font-medium">
+                  <div className="md:col-span-6 text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
                     {isEn && exp.description_en ? exp.description_en : exp.description}
                   </div>
                 </motion.div>
@@ -468,75 +454,70 @@ export default function HomeClient({
       {/* ================================================================== */}
       {/* FOOTER / CONTACT                                                    */}
       {/* ================================================================== */}
-      <footer id="contact" className="py-32 px-6 lg:px-20 bg-[#060606] text-white">
-        <div className="max-w-7xl mx-auto">
+      <footer id="contact" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 bg-[#080808] text-white">
+        <div className="max-w-6xl mx-auto">
 
           {/* Titre */}
           <div className="mb-16">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-6">
-              — {dict?.nav?.contact}
+            <p className="text-xs font-semibold text-blue-600 tracking-wide mb-4">
+              {dict?.nav?.contact}
             </p>
-            <h2 className="font-montserrat text-6xl sm:text-8xl lg:text-[9rem] font-black uppercase tracking-tighter leading-[0.85]">
-              {dict?.contact?.title}
-              <span className="text-blue-600">.</span>
+            <h2 className="font-montserrat text-5xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+              {dict?.contact?.title}<span className="text-blue-600">.</span>
             </h2>
-            <p className="text-zinc-500 text-sm font-medium max-w-md mt-8">
+            <p className="text-sm text-zinc-500 max-w-md leading-relaxed">
               {dict?.contact?.copy}
             </p>
           </div>
 
-          {/* Grid : Formulaire + Infos */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
+          {/* Formulaire + Infos */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-20">
 
             {/* Formulaire */}
             <div className="lg:col-span-7">
               <ContactForm />
             </div>
 
-            {/* Infos contact */}
-            <div className="lg:col-span-5 space-y-10">
+            {/* Infos */}
+            <div className="lg:col-span-5 space-y-8">
 
-              {/* Email */}
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">
+                <p className="text-[10px] font-semibold text-zinc-600 tracking-widest uppercase mb-2">
                   Email
                 </p>
                 <a
                   href="mailto:maxdomyacoubou@gmail.com"
-                  className="text-lg font-black text-white hover:text-blue-400 transition-colors duration-300 break-all"
+                  className="text-base font-bold text-white hover:text-blue-400 transition-colors duration-300 break-all"
                 >
                   maxdomyacoubou@gmail.com
                 </a>
               </div>
 
-              {/* Localisation */}
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">
+                <p className="text-[10px] font-semibold text-zinc-600 tracking-widest uppercase mb-2">
                   {isEn ? "Location" : "Localisation"}
                 </p>
-                <p className="text-lg font-black">Cotonou, Bénin 🇧🇯</p>
+                <p className="text-base font-bold">Cotonou, Bénin 🇧🇯</p>
               </div>
 
-              {/* Disponibilité */}
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-3">
+                <p className="text-[10px] font-semibold text-zinc-600 tracking-widest uppercase mb-2">
                   {isEn ? "Availability" : "Disponibilité"}
                 </p>
-                <div className="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-blue-400 border border-blue-600/20 px-4 py-2">
-                  <span className="relative flex h-2 w-2">
+                <div className="inline-flex items-center gap-2.5 text-xs font-semibold text-blue-400 border border-blue-600/20 px-4 py-2">
+                  <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-600" />
                   </span>
                   {dict?.contact?.availability}
                 </div>
               </div>
 
-              {/* Réseaux */}
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 mb-4">
+                <p className="text-[10px] font-semibold text-zinc-600 tracking-widest uppercase mb-3">
                   {isEn ? "Social" : "Réseaux"}
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-2.5">
                   {socialLinks.map((s) => (
                     <a
                       key={s.name}
@@ -544,7 +525,7 @@ export default function HomeClient({
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.name}
-                      className="w-10 h-10 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:border-blue-600 hover:text-blue-400 transition-all duration-300"
+                      className="w-9 h-9 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:border-blue-600 hover:text-blue-400 transition-all duration-300"
                     >
                       {s.icon}
                     </a>
@@ -554,9 +535,9 @@ export default function HomeClient({
             </div>
           </div>
 
-          {/* Footer bottom */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/5">
-            <div className="font-montserrat font-black text-lg tracking-tighter uppercase flex items-center gap-1">
+          {/* Bottom */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 border-t border-white/5">
+            <div className="font-montserrat font-black text-base tracking-tighter uppercase flex items-center gap-1">
               M
               <span className="relative flex h-1.5 w-1.5 mx-0.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
@@ -564,10 +545,10 @@ export default function HomeClient({
               </span>
               Y
             </div>
-            <p className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">
-              {dict?.contact?.footer_sub} — &copy; {new Date().getFullYear()}
+            <p className="text-[10px] text-zinc-700 tracking-wide">
+              {dict?.contact?.footer_sub} — © {new Date().getFullYear()}
             </p>
-            <p className="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">
+            <p className="text-[10px] text-zinc-700 tracking-wide">
               Cotonou — {new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
