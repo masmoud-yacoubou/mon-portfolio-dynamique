@@ -4,6 +4,10 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   metadataBase: new URL("https://masmoud-yacoubou.vercel.app"),
 
+  verification: {
+    google: "-L7ScPIvkULP8yBBxT5EpeadqPfuulVjtjVTHjINBl4", // ← colle ta vraie valeur ici
+  },
+
   title: {
     template: "%s | Masmoud Y.",
     default: "Masmoud Y. | Développeur Full-Stack Cotonou",
