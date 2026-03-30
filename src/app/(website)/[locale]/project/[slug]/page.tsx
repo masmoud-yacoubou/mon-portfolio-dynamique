@@ -9,6 +9,55 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Github, Globe, Box } from "lucide-react";
+import type { Metadata } from "next";
+
+
+const baseUrl = "https://masmoud-yacoubou.vercel.app";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; locale: string }>;
+}): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const isEn = locale === "en";
+
+  const project = await prisma.project.findUnique({ where: { slug } });
+  if (!project) return {};
+
+  const title       = isEn && project.title_en ? project.title_en : project.title;
+  const description = isEn && project.description_en
+    ? project.description_en
+    : project.description;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/project/${slug}`,
+      languages: {
+        "fr":      `${baseUrl}/fr/project/${slug}`,
+        "en":      `${baseUrl}/en/project/${slug}`,
+        "x-default": `${baseUrl}/fr/project/${slug}`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url:    `${baseUrl}/${locale}/project/${slug}`,
+      images: project.imageUrl
+        ? [{ url: project.imageUrl, width: 1200, height: 630, alt: title }]
+        : [`${baseUrl}/og-image.png`],
+      type: "article",
+    },
+    twitter: {
+      card:        "summary_large_image",
+      title,
+      description,
+      images:      project.imageUrl ? [project.imageUrl] : [`${baseUrl}/og-image.png`],
+    },
+  };
+}
 
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
