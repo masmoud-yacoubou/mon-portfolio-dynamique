@@ -20,7 +20,6 @@ const montserrat = Montserrat({
 
 const baseUrl = "https://masmoud-yacoubou.vercel.app";
 
-// ---- Génération dynamique des metadata selon la locale ----
 export async function generateMetadata({
   params,
 }: {
@@ -29,34 +28,33 @@ export async function generateMetadata({
   const { locale } = await params;
   const isEn = locale === "en";
 
-  const title       = isEn
-    ? "Masmoud Y. | Full-Stack Developer"
-    : "Masmoud Y. | Développeur Full-Stack Cotonou";
+  // Nom complet pour meilleur référencement
+  const title = isEn
+    ? "Masmoud Yacoubou | Full-Stack Developer — Cotonou, Benin"
+    : "Masmoud Yacoubou | Développeur Full-Stack — Cotonou, Bénin";
 
   const description = isEn
-    ? "Full-Stack Developer based in Cotonou, Benin. Specialized in React, Next.js and scalable web architectures."
-    : "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js et architectures web performantes.";
+    ? "Full-Stack Developer based in Cotonou, Benin. Specialized in React, Next.js, Node.js. Available for freelance projects."
+    : "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js. Disponible pour vos projets.";
 
   return {
     title,
     description,
 
-    // ---- Canoniques & hreflang ----
     alternates: {
-      canonical: `${baseUrl}/${locale}`,
+      canonical:  `${baseUrl}/${locale}`,
       languages: {
-        "fr": `${baseUrl}/fr`,
-        "en": `${baseUrl}/en`,
+        "fr":        `${baseUrl}/fr`,
+        "en":        `${baseUrl}/en`,
         "x-default": `${baseUrl}/fr`,
       },
     },
 
-    // ---- Open Graph (LinkedIn, WhatsApp, Facebook) ----
     openGraph: {
       title,
       description,
       url:      `${baseUrl}/${locale}`,
-      siteName: "Masmoud Y. Portfolio",
+      siteName: "Masmoud Yacoubou Portfolio",
       locale:   isEn ? "en_US" : "fr_FR",
       type:     "website",
       images: [
@@ -64,12 +62,11 @@ export async function generateMetadata({
           url:    `${baseUrl}/og-image.png`,
           width:  1200,
           height: 630,
-          alt:    "Masmoud Y. Portfolio Preview",
+          alt:    "Masmoud Yacoubou — Développeur Full-Stack",
         },
       ],
     },
 
-    // ---- Twitter/X ----
     twitter: {
       card:        "summary_large_image",
       title,
@@ -77,7 +74,6 @@ export async function generateMetadata({
       images:      [`${baseUrl}/og-image.png`],
     },
 
-    // ---- Favicon ----
     icons: {
       icon: [
         { url: "/favicon.svg", type: "image/svg+xml" },
