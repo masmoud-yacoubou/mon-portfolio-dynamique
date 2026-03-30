@@ -4,6 +4,8 @@
 // Description : Affiche tous les messages reçus avec statut lu/non lu.
 //               Données chargées côté serveur (SSR).
 // =============================================================================
+export const dynamic = "force-dynamic";
+
 
 import { notFound } from "next/navigation";
 import Link from "next/link";

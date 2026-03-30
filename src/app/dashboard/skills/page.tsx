@@ -4,6 +4,8 @@
 // Description : Affiche toutes les compétences avec options d'édition/suppression.
 //               Données chargées côté serveur (SSR).
 // =============================================================================
+export const dynamic = "force-dynamic";
+
 
 import Link from "next/link";
 import { notFound } from "next/navigation";

@@ -4,6 +4,9 @@
 // Description : Affiche tous les projets avec options d'édition et suppression.
 //               Données chargées côté serveur (SSR).
 // =============================================================================
+export const dynamic = "force-dynamic";
+
+
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
