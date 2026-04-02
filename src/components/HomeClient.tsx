@@ -379,77 +379,118 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* ================================================================== */}
-      {/* EXPÉRIENCES                                                         */}
-      {/* ================================================================== */}
-      <section id="experience" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
-        <div className="max-w-6xl mx-auto">
+{/* ================================================================== */}
+{/* EXPÉRIENCES                                                         */}
+{/* ================================================================== */}
+<section id="experience" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
+  <div className="max-w-6xl mx-auto">
 
-          {/* En-tête */}
-          <div className="mb-16">
-            <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
-              {dict?.nav?.experience}
-            </p>
-            <h2 className="font-montserrat text-4xl sm:text-5xl font-black uppercase tracking-tighter leading-none mb-3">
-              {dict?.sections?.exp_title_accent}
-            </h2>
-            <p className="text-sm text-slate-400 dark:text-zinc-600">
-              {dict?.sections?.exp_subtitle}
-            </p>
-          </div>
+    {/* En-tête */}
+    <div className="mb-16">
+      <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+        {dict?.nav?.experience}
+      </p>
+      <h2 className="font-montserrat text-4xl sm:text-5xl font-black uppercase tracking-tighter leading-none mb-3">
+        {dict?.sections?.exp_title_accent}
+      </h2>
+      <p className="text-sm text-slate-400 dark:text-zinc-600">
+        {dict?.sections?.exp_subtitle}
+      </p>
+    </div>
 
-          {/* Timeline */}
-          <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-px bg-slate-100 dark:bg-zinc-900 hidden md:block" />
+    {/* Timeline */}
+    <div className="relative">
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-slate-100 dark:bg-zinc-900 hidden md:block" />
 
-            <div className="divide-y divide-slate-100 dark:divide-zinc-900">
-              {experiences?.map((exp, index) => (
-                <motion.div
-                  key={exp.id}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
-                  className="group grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-10 md:pl-10 relative"
-                >
-                  {/* Point timeline */}
-                  <div className="absolute left-[-3.5px] top-12 w-1.5 h-1.5 bg-white dark:bg-[#080808] border-2 border-blue-600 hidden md:block group-hover:bg-blue-600 transition-colors duration-300 rounded-full" />
+      <div className="divide-y divide-slate-100 dark:divide-zinc-900">
+        {experiences?.map((exp, index) => {
 
-                  {/* Période */}
-                  <div className="md:col-span-2">
-                    <span className="text-xs font-bold text-blue-600">
-                      {new Date(exp.startDate).getFullYear()}
-                    </span>
-                    <p className="text-xs text-slate-300 dark:text-zinc-700 mt-0.5">
-                      — {exp.endDate
-                          ? new Date(exp.endDate).getFullYear()
-                          : (isEn ? "Present" : "Présent")}
-                    </p>
-                  </div>
+          // ---- Formatage des dates ----
+          const startYear  = new Date(exp.startDate).getFullYear();
+          const startMonth = new Date(exp.startDate).toLocaleDateString(
+            isEn ? "en-US" : "fr-FR",
+            { month: "short" }
+          );
+          const endYear  = exp.endDate ? new Date(exp.endDate).getFullYear()  : null;
+          const endMonth = exp.endDate
+            ? new Date(exp.endDate).toLocaleDateString(
+                isEn ? "en-US" : "fr-FR",
+                { month: "short" }
+              )
+            : null;
 
-                  {/* Rôle */}
-                  <div className="md:col-span-4">
-                    <h3 className="font-montserrat text-lg font-black uppercase tracking-tight mb-1.5 group-hover:text-blue-600 transition-colors duration-300">
-                      {isEn && exp.role_en ? exp.role_en : exp.role}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-px bg-blue-600 flex-shrink-0" />
-                      <span className="text-xs font-medium text-slate-400 dark:text-zinc-500">
-                        {exp.company}
-                      </span>
-                    </div>
-                  </div>
+          const periodStart = `${startMonth} ${startYear}`;
+          const periodEnd   = endYear
+            ? `${endMonth} ${endYear}`
+            : (isEn ? "Present" : "Présent");
 
-                  {/* Description */}
-                  <div className="md:col-span-6 text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
-                    {isEn && exp.description_en ? exp.description_en : exp.description}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+          // Durée approximative
+          const endDate    = exp.endDate ? new Date(exp.endDate) : new Date();
+          const startDate  = new Date(exp.startDate);
+          const months     = (endDate.getFullYear() - startDate.getFullYear()) * 12
+                           + (endDate.getMonth() - startDate.getMonth());
+          const years      = Math.floor(months / 12);
+          const remMonths  = months % 12;
+
+          const duration = years > 0
+            ? `${years} an${years > 1 ? "s" : ""}${remMonths > 0 ? ` ${remMonths} mois` : ""}`
+            : `${months} mois`;
+
+          return (
+            <motion.div
+              key={exp.id}
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+              className="group grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 py-10 md:pl-10 relative"
+            >
+              {/* Point timeline */}
+              <div className="absolute left-[-3.5px] top-12 w-2 h-2 bg-white dark:bg-[#080808] border-2 border-blue-600 hidden md:block group-hover:bg-blue-600 transition-colors duration-300 rounded-full" />
+
+              {/* Période */}
+              <div className="md:col-span-3">
+                <div className="inline-flex flex-col gap-1">
+                  <span className="text-xs font-bold text-blue-600">
+                    {periodStart}
+                  </span>
+                  <span className="text-xs text-slate-400 dark:text-zinc-600">
+                    → {periodEnd}
+                  </span>
+                  <span className="text-[10px] font-medium text-slate-300 dark:text-zinc-700 mt-1 border border-slate-100 dark:border-zinc-800 px-2 py-0.5 w-fit">
+                    {duration}
+                  </span>
+                </div>
+              </div>
+
+              {/* Rôle + Entreprise + Description */}
+              <div className="md:col-span-9 space-y-3">
+
+                {/* Rôle */}
+                <h3 className="font-montserrat text-lg sm:text-xl font-black uppercase tracking-tight group-hover:text-blue-600 transition-colors duration-300">
+                  {isEn && exp.role_en ? exp.role_en : exp.role}
+                </h3>
+
+                {/* Entreprise */}
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-px bg-blue-600 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wide">
+                    {exp.company}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed pt-1 border-t border-slate-50 dark:border-zinc-900">
+                  {isEn && exp.description_en ? exp.description_en : exp.description}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* ================================================================== */}
       {/* FOOTER / CONTACT                                                    */}
