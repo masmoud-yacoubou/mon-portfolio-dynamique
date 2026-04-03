@@ -103,18 +103,26 @@ export default async function ProjectPage({ params }: Props) {
           <div className="h-px w-16 bg-blue-600 self-end mb-2 hidden sm:block" />
         </div>
 
-        {/* Image principale */}
-        {project.imageUrl && (
-          <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 border border-slate-100 dark:border-zinc-900">
-            <Image
-              src={project.imageUrl}
-              alt={project.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+        {/* Image ou Vidéo principale */}
+{project.videoUrl ? (
+  <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 border border-slate-100 dark:border-zinc-900">
+    <video
+      src={project.videoUrl}
+      controls
+      className="w-full h-full object-cover"
+    />
+  </div>
+) : project.imageUrl ? (
+  <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 border border-slate-100 dark:border-zinc-900">
+    <Image
+      src={project.imageUrl}
+      alt={project.title}
+      fill
+      className="object-cover"
+      priority
+    />
+  </div>
+) : null}
 
         {/* Contenu */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
@@ -190,6 +198,31 @@ export default async function ProjectPage({ params }: Props) {
           </div>
         </div>
       </div>
+      {/* JSON-LD — Données structurées projet */}
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context":    "https://schema.org",
+      "@type":       "CreativeWork",
+      name:          isEn && project.title_en ? project.title_en : project.title,
+      description:   isEn && project.description_en
+                       ? project.description_en
+                       : project.description,
+      url:           `https://masmoud-yacoubou.vercel.app/${activeLocale}/project/${project.slug}`,
+      image:         project.imageUrl ?? undefined,
+      dateCreated:   project.createdAt,
+      dateModified:  project.updatedAt,
+      author: {
+        "@type": "Person",
+        name:    "Masmoud Yacoubou",
+        url:     "https://masmoud-yacoubou.vercel.app",
+      },
+      keywords: project.technologies.join(", "),
+      ...(project.link && { sameAs: project.link }),
+    }),
+  }}
+/>
     </main>
   );
 }

@@ -13,7 +13,7 @@ import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { Pencil, Plus, ExternalLink, Github } from "lucide-react";
 import DeleteButton from "./_components/DeleteButton";
-import { a } from "framer-motion/client";
+/* import { a } from "framer-motion/client"; */
 
 /**
  * Récupère tous les projets depuis la base de données

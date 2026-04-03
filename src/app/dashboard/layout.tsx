@@ -8,11 +8,12 @@
 "use client";
 
 import { useState } from "react";
-import type { Metadata } from "next";
+/* import type { Metadata } from "next"; */
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Sidebar from "./_components/Sidebar";
 import Header from "./_components/Header";
 import "@/app/globals.css";
+
 
 // Note: metadata ne peut pas être exportée depuis un Client Component.
 // Déplace-la dans un layout séparé si le SEO est requis.

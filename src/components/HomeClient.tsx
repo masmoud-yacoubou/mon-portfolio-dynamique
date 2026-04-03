@@ -242,38 +242,45 @@ export default function HomeClient({
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="group"
               >
-                {/* Image */}
-                <Link href={`/${activeLocale}/project/${project.slug}`}>
-                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-zinc-900 mb-5">
-                    <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-white/60 bg-black/30 backdrop-blur-sm px-2 py-0.5">
-                      {(index + 1).toString().padStart(2, "0")}
-                    </div>
+                {/* Image ou Vidéo */}
+<div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-zinc-900 mb-5">
+  <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-white/60 bg-black/30 backdrop-blur-sm px-2 py-0.5">
+    {(index + 1).toString().padStart(2, "0")}
+  </div>
 
-                    {project.imageUrl ? (
-                      <Image
-                        src={project.imageUrl}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 640px) 100vw, 50vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-montserrat text-5xl font-black text-slate-200 dark:text-zinc-800 uppercase">
-                          {project.title.charAt(0)}
-                        </span>
-                      </div>
-                    )}
+  {project.videoUrl ? (
+    <video
+      src={project.videoUrl}
+      autoPlay
+      muted
+      loop
+      playsInline
+      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+    />
+  ) : project.imageUrl ? (
+    <Image
+      src={project.imageUrl}
+      alt={project.title}
+      fill
+      className="object-cover transition-transform duration-700 group-hover:scale-105"
+      sizes="(max-width: 640px) 100vw, 50vw"
+    />
+  ) : (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <span className="font-montserrat text-5xl font-black text-slate-200 dark:text-zinc-800 uppercase">
+        {project.title.charAt(0)}
+      </span>
+    </div>
+  )}
 
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="bg-white text-black text-[10px] font-bold tracking-wide px-5 py-2.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        {dict?.projects?.view_project} →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+    <span className="bg-white text-black text-[10px] font-bold tracking-wide px-5 py-2.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+      {dict?.projects?.view_project} →
+    </span>
+  </div>
+</div>
 
                 {/* Infos */}
                 <div className="flex items-start justify-between gap-3">

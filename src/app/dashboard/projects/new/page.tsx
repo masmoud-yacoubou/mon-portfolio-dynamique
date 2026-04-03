@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Plus, X } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "../../_components/ImageUpload";
+import VideoUpload from "../../_components/VideoUpload";
 
 // ---- Types ----
 interface ProjectFormData {
@@ -20,6 +21,7 @@ interface ProjectFormData {
   description:    string;
   description_en: string;
   imageUrl:       string;
+  videoUrl:       string;
   slug:           string;
   link:           string;
   githubUrl:      string;
@@ -73,6 +75,7 @@ export default function NewProjectPage() {
     description:    "",
     description_en: "",
     imageUrl:       "",
+    videoUrl:       "",
     slug:           "",
     link:           "",
     githubUrl:      "",
@@ -242,6 +245,12 @@ export default function NewProjectPage() {
             onChange={(url) => updateField("imageUrl", url)}
             folder="projects"
             label="Image du projet"
+            />
+            <VideoUpload
+              value={form.videoUrl}
+              onChange={(url) => updateField("videoUrl", url)}
+              folder="projects"
+              label="Vidéo du projet (optionnel)"
             />
 
           <Field label="Slug" required hint="Généré automatiquement depuis le titre — modifiable">

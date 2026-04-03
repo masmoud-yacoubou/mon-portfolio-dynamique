@@ -7,7 +7,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { LayoutDashboard, FolderKanban, Wrench, Briefcase, MessageSquare } from "lucide-react";
+import {  FolderKanban, Wrench, Briefcase, MessageSquare } from "lucide-react";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 

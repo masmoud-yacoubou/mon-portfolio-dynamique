@@ -41,6 +41,7 @@ export async function PUT(
         description:    body.description    ?? existing.description,
         description_en: body.description_en ?? existing.description_en,
         imageUrl:       body.imageUrl       ?? existing.imageUrl,
+        videoUrl:       body.videoUrl ?? existing.videoUrl,
         link:           body.link           ?? existing.link,
         githubUrl:      body.githubUrl      ?? existing.githubUrl,
         slug:           body.slug           ?? existing.slug,

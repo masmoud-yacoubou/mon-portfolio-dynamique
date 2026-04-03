@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
         description:    body.description,
         description_en: body.description_en ?? null,
         imageUrl:       body.imageUrl       ?? null,
+        videoUrl:       body.videoUrl ?? null,
         link:           body.link           ?? null,
         githubUrl:      body.githubUrl      ?? null,
         slug:           body.slug,

@@ -61,3 +61,23 @@ export function extractPublicId(url: string): string {
   const folder = parts[parts.length - 2];
   return `${folder}/${filename}`;
 }
+
+/**
+ * Upload une vidéo vers Cloudinary
+ */
+export async function uploadVideo(
+  file: string,
+  folder: string = "portfolio/videos",
+): Promise<string> {
+  const result = await cloudinary.uploader.upload(file, {
+    folder,
+    resource_type: "video",        // ← important pour les vidéos
+    overwrite:     true,
+    transformation: [
+      { quality: "auto:good" },    // Compression automatique
+      { fetch_format: "auto" },    // Format optimal (mp4/webm)
+    ],
+  });
+
+  return result.secure_url;
+}

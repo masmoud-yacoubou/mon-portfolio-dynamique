@@ -12,6 +12,8 @@ import { Loader2, Plus, X } from "lucide-react";
 import type { Project } from "@prisma/client";
 import Link from "next/link";
 import ImageUpload from "@/app/dashboard/_components/ImageUpload"; // ← chemin corrigé via alias @
+import VideoUpload from "@/app/dashboard/_components/VideoUpload";
+
 
 // ---- Styles partagés ----
 const inputClass =
@@ -59,6 +61,7 @@ export default function EditProjectForm({ project }: { project: Project }) {
     link:           project.link           ?? "",
     githubUrl:      project.githubUrl      ?? "",
     imageUrl:       project.imageUrl       ?? "",
+    videoUrl:       project.videoUrl       ?? "",
     technologies:   project.technologies,
     featured:       project.featured,
     order:          project.order,
@@ -174,6 +177,13 @@ export default function EditProjectForm({ project }: { project: Project }) {
           onChange={(url: string) => updateField("imageUrl", url)}
           folder="projects"
           label="Image du projet"
+        />
+
+        <VideoUpload
+          value={form.videoUrl ?? ""}
+          onChange={(url: string) => updateField("videoUrl", url)}
+          folder="projects"
+          label="Vidéo du projet (optionnel)"
         />
 
         <Field label="Slug" required>

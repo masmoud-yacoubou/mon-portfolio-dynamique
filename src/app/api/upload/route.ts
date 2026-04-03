@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { uploadImage } from "@/lib/cloudinary";
+import { uploadImage, uploadVideo } from "@/lib/cloudinary";
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,9 +28,10 @@ export async function POST(request: NextRequest) {
 
     // Validation du type de fichier (base64)
     const isValidImage = body.file.startsWith("data:image/");
-    if (!isValidImage) {
+    const isVideo = body.file.startsWith("data:video/");
+    if (!isValidImage && !isVideo) {
       return NextResponse.json(
-        { error: "Format de fichier invalide. Utilisez une image." },
+        { error: "Format invalide. Image ou vidéo uniquement." },
         { status: 400 }
       );
     }
@@ -38,16 +39,19 @@ export async function POST(request: NextRequest) {
     // Détermination du dossier selon le contexte
     const folder = body.folder ?? "portfolio";
 
-    // Upload vers Cloudinary
-    const url = await uploadImage(body.file, `portfolio/${folder}`);
+    // Upload selon le type
+    const url = isVideo
+      ? await uploadVideo(body.file, `portfolio/${folder}`)
+      : await uploadImage(body.file, `portfolio/${folder}`);
 
-    return NextResponse.json({ url }, { status: 201 });
+    return NextResponse.json({ url, type: isVideo ? "video" : "image" }, { status: 201 });
 
   } catch (error) {
     console.error("[POST /api/upload]", error);
     return NextResponse.json(
-      { error: "Erreur lors de l'upload de l'image." },
+      { error: "Erreur lors de l'upload." },
       { status: 500 }
     );
   }
 }
+
