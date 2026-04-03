@@ -174,8 +174,13 @@ export default function HomeClient({
                   src="/photo.png"
                   alt="Masmoud Yacoubou"
                   fill
-                  className="object-cover scale-105 group-hover:scale-110 transition-transform duration-1000"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 transition-transform duration-1000"
                   priority
+                  quality={85}                          // ← 85 = meilleur ratio qualité/poids
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  placeholder="blur"                    // ← Flou pendant le chargement
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+
                 />
               </div>
 
@@ -211,107 +216,140 @@ export default function HomeClient({
       </section>
 
       {/* ================================================================== */}
-      {/* PROJETS                                                             */}
-      {/* ================================================================== */}
-      <section id="works" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
-        <div className="max-w-6xl mx-auto">
+{/* PROJETS                                                             */}
+{/* ================================================================== */}
+<section id="works" className="py-24 sm:py-32 px-5 sm:px-8 lg:px-16 border-t border-slate-100 dark:border-zinc-900">
+  <div className="max-w-6xl mx-auto">
 
-          {/* En-tête */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
-            <div>
-              <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
-                {dict?.projects?.count_label}
-              </p>
-              <h2 className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-none">
-                {dict?.nav?.works}
-              </h2>
-            </div>
-            <span className="font-montserrat text-6xl sm:text-8xl font-black text-slate-50 dark:text-zinc-900 leading-none select-none self-end">
-              {(projects?.length ?? 0).toString().padStart(2, "0")}
-            </span>
-          </div>
-
-          {/* Grille */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12">
-            {projects?.map((project, index) => (
-              <motion.article
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="group"
-              >
-                {/* Image ou Vidéo */}
-<div className="relative aspect-[4/3] overflow-hidden bg-slate-50 dark:bg-zinc-900 mb-5">
-  <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-white/60 bg-black/30 backdrop-blur-sm px-2 py-0.5">
-    {(index + 1).toString().padStart(2, "0")}
-  </div>
-
-  {project.videoUrl ? (
-    <video
-      src={project.videoUrl}
-      autoPlay
-      muted
-      loop
-      playsInline
-      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-    />
-  ) : project.imageUrl ? (
-    <Image
-      src={project.imageUrl}
-      alt={project.title}
-      fill
-      className="object-cover transition-transform duration-700 group-hover:scale-105"
-      sizes="(max-width: 640px) 100vw, 50vw"
-    />
-  ) : (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <span className="font-montserrat text-5xl font-black text-slate-200 dark:text-zinc-800 uppercase">
-        {project.title.charAt(0)}
+    {/* En-tête */}
+    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
+      <div>
+        <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+          {dict?.projects?.count_label}
+        </p>
+        <h2 className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-none">
+          {dict?.nav?.works}
+        </h2>
+      </div>
+      <span className="font-montserrat text-6xl sm:text-8xl font-black text-slate-50 dark:text-zinc-900 leading-none select-none self-end">
+        {(projects?.length ?? 0).toString().padStart(2, "0")}
       </span>
     </div>
-  )}
 
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-    <span className="bg-white text-black text-[10px] font-bold tracking-wide px-5 py-2.5 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-      {dict?.projects?.view_project} →
-    </span>
-  </div>
-</div>
+    {/* Grille */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {projects?.map((project, index) => (
+        <motion.article
+          key={project.id}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Link
+            href={`/${activeLocale}/project/${project.slug}`}
+            className="group block bg-white dark:bg-zinc-950 border border-slate-100 dark:border-zinc-900 hover:border-blue-600/30 dark:hover:border-blue-600/30 transition-all duration-500 hover:shadow-xl hover:shadow-blue-600/5"
+          >
+            {/* Image / Vidéo */}
+            <div className="relative aspect-[16/10] overflow-hidden bg-slate-50 dark:bg-zinc-900">
 
-                {/* Infos */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap gap-1.5 mb-2">
-                      {project.technologies?.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-[10px] text-slate-400 dark:text-zinc-600 border border-slate-200 dark:border-zinc-800 px-2 py-0.5"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="font-montserrat text-lg sm:text-xl font-black uppercase tracking-tight group-hover:text-blue-600 transition-colors duration-300 truncate">
-                      {isEn && project.title_en ? project.title_en : project.title}
-                    </h3>
-                  </div>
+              {/* Numéro */}
+              <div className="absolute top-4 left-4 z-10 font-mono text-[10px] font-bold text-white/70 bg-black/30 backdrop-blur-sm px-2 py-1">
+                {(index + 1).toString().padStart(2, "0")}
+              </div>
 
-                  <Link
-                    href={`/${activeLocale}/project/${project.slug}`}
-                    className="flex-shrink-0 w-9 h-9 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all duration-300"
-                  >
-                    <span className="text-sm">↗</span>
-                  </Link>
+              {/* Badge featured */}
+              {project.featured && (
+                <div className="absolute top-4 right-4 z-10 text-[9px] font-black uppercase tracking-widest bg-blue-600 text-white px-2.5 py-1">
+                  Featured
                 </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
+              )}
+
+              {/* Media */}
+              {project.videoUrl ? (
+                <video
+                  src={project.videoUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : project.imageUrl ? (
+                <Image
+                  src={project.imageUrl}
+                  alt={project.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  quality={90}
+                  priority                         // ← 85 = meilleur ratio qualité/poids
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  placeholder="blur"                    // ← Flou pendant le chargement
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-zinc-900 dark:to-zinc-800">
+                  <span className="font-montserrat text-6xl font-black text-slate-200 dark:text-zinc-700 uppercase">
+                    {project.title.charAt(0)}
+                  </span>
+                </div>
+              )}
+
+              {/* Overlay hover */}
+              <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-all duration-500" />
+
+              {/* CTA hover centré */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-white dark:bg-black text-black dark:text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-400 shadow-lg">
+                  {dict?.projects?.view_project ?? "Voir le projet"} →
+                </div>
+              </div>
+            </div>
+
+            {/* Contenu carte */}
+            <div className="p-5 sm:p-6">
+
+              {/* Technologies */}
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {project.technologies?.slice(0, 4).map((tech) => (
+                  <span
+                    key={tech}
+                    className="text-[9px] font-semibold text-slate-400 dark:text-zinc-600 border border-slate-100 dark:border-zinc-800 px-2 py-0.5 group-hover:border-blue-600/20 group-hover:text-blue-600 transition-colors duration-300"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {/* Titre + flèche */}
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <h3 className="font-montserrat text-lg sm:text-xl font-black uppercase tracking-tight group-hover:text-blue-600 transition-colors duration-300 leading-tight">
+                  {isEn && project.title_en ? project.title_en : project.title}
+                </h3>
+                <span className="flex-shrink-0 text-slate-300 dark:text-zinc-700 group-hover:text-blue-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 text-lg mt-0.5">
+                  ↗
+                </span>
+              </div>
+
+              {/* Description courte */}
+              <p className="text-xs text-slate-400 dark:text-zinc-600 leading-relaxed line-clamp-2 group-hover:text-slate-500 dark:group-hover:text-zinc-500 transition-colors duration-300">
+                {isEn && project.description_en
+                  ? project.description_en
+                  : project.description}
+              </p>
+
+              {/* Footer carte — ligne bleue animée */}
+              <div className="mt-5 h-px bg-slate-100 dark:bg-zinc-900 relative overflow-hidden">
+                <div className="absolute inset-y-0 left-0 w-0 bg-blue-600 group-hover:w-full transition-all duration-500 ease-out" />
+              </div>
+            </div>
+          </Link>
+        </motion.article>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ================================================================== */}
       {/* SKILLS                                                              */}

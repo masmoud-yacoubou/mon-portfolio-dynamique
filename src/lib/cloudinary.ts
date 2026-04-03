@@ -34,8 +34,9 @@ export async function uploadImage(
     public_id:      publicId,
     overwrite:      true,
     transformation: [
-      { quality: "auto:best" },  // Qualité optimale automatique
-      { fetch_format: "auto" },  // Format optimal (WebP si supporté)
+      { quality: "auto:best" },   // Qualité optimale automatique
+      { fetch_format: "auto" },   // WebP si supporté, AVIF sinon
+      { width: 1200, crop: "limit" }, // ← Max 1200px, jamais d'agrandissement
     ],
   });
 
@@ -71,11 +72,13 @@ export async function uploadVideo(
 ): Promise<string> {
   const result = await cloudinary.uploader.upload(file, {
     folder,
-    resource_type: "video",        // ← important pour les vidéos
+    resource_type: "video",
     overwrite:     true,
     transformation: [
-      { quality: "auto:good" },    // Compression automatique
-      { fetch_format: "auto" },    // Format optimal (mp4/webm)
+      { quality: "auto:good" },     // Bon ratio qualité/poids
+      { fetch_format: "auto" },     // WebM si supporté
+      { width: 1280, crop: "limit" }, // Max 720p
+      { bit_rate: "800k" },         // ← Limite le débit
     ],
   });
 
