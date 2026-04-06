@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Masmoud Yacoubou, Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js et architectures web robustes.",
+    "Masmoud Yacoubou, Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Django et architectures web robustes.",
 
   keywords: [
     "Développeur Full-Stack",
@@ -22,6 +22,14 @@ export const metadata: Metadata = {
     "React",
     "Next.js",
     "Node.js",
+    "Développeur Web",
+    "Python",
+    "Javascript",
+    "Site Web",
+    "Freelance",
+    "Masmoud",
+    "Yacoubou",
+    "Django",
     "Cotonou",
     "Bénin",
     "Portfolio",
@@ -39,8 +47,8 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title:       "Masmoud Yacoubou | Full-Stack Developer",
-    description: "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js et architectures web performantes.",
+    title:       "Masmoud Yacoubou | Développeur Full-Stack",
+    description: "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Django et architectures web performantes.",
     url:         "https://masmoud-yacoubou.vercel.app",
     siteName:    "Masmoud Yacoubou Portfolio",
     images: [
@@ -95,7 +103,7 @@ export default function RootLayout({
               givenName:  "Masmoud",
               familyName: "Yacoubou",
               jobTitle:   "Développeur Full-Stack",
-              description: "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js et architectures web robustes.",
+              description: "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js, Django et architectures web robustes.",
 
               // URL principale
               url: "https://masmoud-yacoubou.vercel.app",
@@ -127,6 +135,7 @@ export default function RootLayout({
                 "React",
                 "Next.js",
                 "Node.js",
+                "Django",
                 "TypeScript",
                 "PostgreSQL",
                 "Prisma",

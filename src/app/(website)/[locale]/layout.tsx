@@ -34,8 +34,8 @@ export async function generateMetadata({
     : "Masmoud Yacoubou | Développeur Full-Stack — Cotonou, Bénin";
 
   const description = isEn
-    ? "Full-Stack Developer based in Cotonou, Benin. Specialized in React, Next.js, Node.js. Available for freelance projects."
-    : "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js. Disponible pour vos projets.";
+    ? "Full-Stack Developer based in Cotonou, Benin. Specialized in React, Next.js, Node.js, Django. Available for freelance projects."
+    : "Développeur Full-Stack basé à Cotonou, Bénin. Spécialisé en React, Next.js, Node.js, Django. Disponible pour vos projets.";
 
   return {
     title,
@@ -54,7 +54,7 @@ export async function generateMetadata({
       title,
       description,
       url:      `${baseUrl}/${locale}`,
-      siteName: "Masmoud Yacoubou Portfolio",
+      siteName: "Masmoud Yacoubou",
       locale:   isEn ? "en_US" : "fr_FR",
       type:     "website",
       images: [
