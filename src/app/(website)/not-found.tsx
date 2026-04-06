@@ -1,50 +1,97 @@
-"use client"
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Home } from 'lucide-react';
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowLeft, Home } from "lucide-react";
+import "@/app/globals.css";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-white dark:bg-[#020202] flex items-center justify-center px-4 overflow-hidden relative">
-      {/* Background Decor */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+    <div
+      className="min-h-screen bg-[#080808] text-white flex items-center justify-center px-6"
+      style={{ fontFamily: "system-ui, sans-serif" }}
+    >
+      <div className="max-w-xl w-full">
 
-      <div className="text-center relative z-10">
-        <motion.h1 
+        {/* Ligne décorative top */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{ originX: 0 }}
+          className="h-px bg-blue-600 mb-16 w-24"
+        />
+
+        {/* Label */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-xs font-semibold text-blue-600 tracking-widest uppercase mb-6"
+        >
+          Erreur 404
+        </motion.p>
+
+        {/* Titre */}
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-[150px] sm:text-[200px] font-black leading-none tracking-tighter italic text-zinc-100 dark:text-zinc-900 absolute -top-24 left-1/2 -translate-x-1/2 -z-10 select-none"
+          transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-[0.95] mb-8"
         >
-          404
+          Page<br />
+          <span className="text-blue-600">introuvable</span>
+          <span className="text-white">.</span>
         </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-sm text-zinc-500 leading-relaxed mb-12 max-w-sm"
         >
-          <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter dark:text-white mb-6 italic">
-            Perdu dans le <span className="text-blue-600">vide ?</span>
-          </h2>
-          <p className="text-slate-500 dark:text-zinc-400 max-w-md mx-auto mb-10 font-medium">
-            La page que vous recherchez n&apos;existe pas ou a été déplacée vers une autre dimension.
-          </p>
+          La page que vous recherchez n&apos;existe pas ou a été déplacée.
+          Revenez à l&apos;accueil pour continuer.
+        </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button 
-              onClick={() => window.history.back()}
-              className="flex items-center gap-2 px-8 py-4 border border-slate-200 dark:border-zinc-800 dark:text-white rounded-full font-black text-[11px] uppercase tracking-widest hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
-            >
-              <ArrowLeft size={16} /> Retour
-            </button>
-            <Link 
-              href="/"
-              className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-blue-500/20"
-            >
-              <Home size={16} /> Accueil
-            </Link>
-          </div>
+        {/* Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="flex flex-wrap items-center gap-4"
+        >
+          <Link
+            href="/fr"
+            className="group relative inline-flex items-center gap-3 bg-blue-600 text-white px-7 py-3.5 text-xs font-bold tracking-wide overflow-hidden transition-all duration-300"
+          >
+            <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            <Home size={14} className="relative z-10" />
+            <span className="relative z-10 group-hover:text-black transition-colors duration-300">
+              Retour à l&apos;accueil
+            </span>
+          </Link>
+
+          <button
+            onClick={() => window.history.back()}
+            className="inline-flex items-center gap-3 text-xs font-semibold text-zinc-500 hover:text-white transition-colors border-b border-transparent hover:border-white pb-px"
+          >
+            <ArrowLeft size={14} />
+            Page précédente
+          </button>
         </motion.div>
+
+        {/* Grand 404 décoratif */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="text-[180px] sm:text-[220px] font-black leading-none tracking-tighter text-white/[0.03] select-none mt-12 -mb-8"
+        >
+          404
+        </motion.p>
+
       </div>
     </div>
   );
