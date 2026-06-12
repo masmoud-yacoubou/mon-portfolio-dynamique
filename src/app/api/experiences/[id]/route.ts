@@ -42,7 +42,12 @@ export async function PUT(
         description_en: body.description_en ?? existing.description_en,
         company:        body.company        ?? existing.company,
         startDate:      body.startDate ? new Date(body.startDate) : existing.startDate,
-        endDate:        body.endDate   ? new Date(body.endDate)   : existing.endDate,
+        endDate:
+  body.endDate === undefined
+    ? existing.endDate
+    : body.endDate
+      ? new Date(body.endDate)
+      : null,
         order:          body.order          ?? existing.order,
       },
     });

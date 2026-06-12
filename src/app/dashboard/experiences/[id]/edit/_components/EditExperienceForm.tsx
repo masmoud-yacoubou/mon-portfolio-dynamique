@@ -97,7 +97,7 @@ export default function EditExperienceForm({ experience }: { experience: Experie
           <input type="text" value={form.role} onChange={(e) => updateField("role", e.target.value)} required className={inputClass} />
         </Field>
         <Field label="Description" required>
-          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} required rows={4} className={inputClass} />
+          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} required rows={8} className={inputClass} />
         </Field>
       </div>
 
@@ -108,7 +108,7 @@ export default function EditExperienceForm({ experience }: { experience: Experie
           <input type="text" value={form.role_en} onChange={(e) => updateField("role_en", e.target.value)} className={inputClass} />
         </Field>
         <Field label="Description (EN)" hint="Optionnel">
-          <textarea value={form.description_en} onChange={(e) => updateField("description_en", e.target.value)} rows={4} className={inputClass} />
+          <textarea value={form.description_en} onChange={(e) => updateField("description_en", e.target.value)} rows={8} className={inputClass} />
         </Field>
       </div>
 

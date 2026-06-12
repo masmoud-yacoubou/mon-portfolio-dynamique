@@ -28,6 +28,7 @@ export function ThemeProvider({
       attribute={attribute}
       defaultTheme={defaultTheme}
       enableSystem={enableSystem}
+      disableTransitionOnChange
     >
       {children}
     </NextThemesProvider>

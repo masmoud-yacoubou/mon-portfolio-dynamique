@@ -1,41 +1,21 @@
 // src/app/sitemap.ts
 import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
+import { getLanguageAlternates, getLocalizedUrl, siteConfig } from "@/lib/site";
 
-const baseUrl = "https://masmoud-yacoubou.vercel.app";
-const locales = ["fr", "en"];
+const locales = siteConfig.locales;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-
-  // ---- Pages statiques ----
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url:             `${baseUrl}/fr`,
-      lastModified:    new Date(),
-      changeFrequency: "weekly",
-      priority:        1.0,
-      alternates: {
-        languages: {
-          fr: `${baseUrl}/fr`,
-          en: `${baseUrl}/en`,
-        },
-      },
+  const staticRoutes: MetadataRoute.Sitemap = locales.map((locale) => ({
+    url: getLocalizedUrl(locale),
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 1.0,
+    alternates: {
+      languages: getLanguageAlternates(),
     },
-    {
-      url:             `${baseUrl}/en`,
-      lastModified:    new Date(),
-      changeFrequency: "weekly",
-      priority:        1.0,
-      alternates: {
-        languages: {
-          fr: `${baseUrl}/fr`,
-          en: `${baseUrl}/en`,
-        },
-      },
-    },
-  ];
+  }));
 
-  // ---- Pages projets dynamiques ----
   let projectRoutes: MetadataRoute.Sitemap = [];
 
   try {
@@ -45,20 +25,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     projectRoutes = projects.flatMap((project) =>
       locales.map((locale) => ({
-        url:             `${baseUrl}/${locale}/project/${project.slug}`,
-        lastModified:    project.updatedAt,
+        url: getLocalizedUrl(locale, `project/${project.slug}`),
+        lastModified: project.updatedAt,
         changeFrequency: "monthly" as const,
-        priority:        0.8,
+        priority: 0.8,
         alternates: {
-          languages: {
-            fr: `${baseUrl}/fr/project/${project.slug}`,
-            en: `${baseUrl}/en/project/${project.slug}`,
-          },
+          languages: getLanguageAlternates(`project/${project.slug}`),
         },
       }))
     );
   } catch {
-    // Si Prisma échoue au build, on continue sans les projets
     console.warn("[sitemap] Impossible de récupérer les projets");
   }
 

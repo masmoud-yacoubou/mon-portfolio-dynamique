@@ -103,6 +103,7 @@ export default function VideoUpload({
       {value ? (
         <div className="relative group">
           <video
+          suppressHydrationWarning
             src={value}
             controls
             className="w-full aspect-video border border-slate-200 dark:border-zinc-800 bg-black"

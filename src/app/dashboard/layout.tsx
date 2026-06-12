@@ -1,57 +1,35 @@
-// src/app/dashboard/layout.tsx
-// =============================================================================
-// LAYOUT DASHBOARD
-// Description : Structure principale du dashboard.
-//               Sidebar drawer sur mobile, fixe sur desktop (lg+).
-// =============================================================================
-
-"use client";
-
-import { useState } from "react";
-/* import type { Metadata } from "next"; */
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Sidebar from "./_components/Sidebar";
-import Header from "./_components/Header";
 import "@/app/globals.css";
+import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { montserrat, poppins } from "@/lib/fonts";
+import DashboardShell from "./_components/DashboardShell";
 
-
-// Note: metadata ne peut pas être exportée depuis un Client Component.
-// Déplace-la dans un layout séparé si le SEO est requis.
+export const metadata: Metadata = {
+  title: "Dashboard | Masmoud Yacoubou",
+  description: "Interface d'administration du portfolio de Masmoud Yacoubou.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html
+      lang="fr"
+      suppressHydrationWarning
+      className={`${poppins.variable} ${montserrat.variable}`}
+    >
       <body
-        className="antialiased bg-slate-50 dark:bg-zinc-950"
+        className="font-poppins antialiased bg-slate-50 text-black dark:bg-zinc-950 dark:text-white"
         suppressHydrationWarning
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-
-          {/* Sidebar (drawer mobile / fixe desktop) */}
-          <Sidebar
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-          />
-
-          {/* Zone principale */}
-          <div className="lg:ml-64 min-h-screen flex flex-col">
-
-            {/* Header */}
-            <Header onMenuOpen={() => setSidebarOpen(true)} />
-
-            {/* Contenu */}
-            <main className="flex-1 p-4 sm:p-6 lg:p-8">
-              {children}
-            </main>
-
-          </div>
-
+          <DashboardShell>{children}</DashboardShell>
         </ThemeProvider>
       </body>
     </html>

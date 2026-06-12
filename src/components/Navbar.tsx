@@ -1,17 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Languages, Menu, X } from "lucide-react";
+import { Sun, Moon, Languages, Menu, X, ArrowUpRight } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-// =============================================================================
-// THEME SWITCHER
-// =============================================================================
+const navLinks = [
+  { nameEn: "Portfolio", nameFr: "Portfolio", href: "#works", section: "works" },
+  { nameEn: "Stack", nameFr: "Stack", href: "#skills", section: "skills" },
+  { nameEn: "Experience", nameFr: "Expérience", href: "#experience", section: "experience" },
+  { nameEn: "Contact", nameFr: "Contact", href: "#contact", section: "contact" },
+];
 
-const ThemeSwitcher = () => {
+function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -22,191 +26,138 @@ const ThemeSwitcher = () => {
 
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-transparent" />
+      <div className="h-10 w-10 rounded-full border border-[var(--color-light-border)] dark:border-[var(--color-night-border)]" />
     );
   }
 
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-black dark:text-yellow-400 transition-all hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 border border-transparent active:scale-90"
-      aria-label="Toggle Theme"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-light-border)] bg-[var(--color-light-surface)]/80 text-[var(--color-light-text-secondary)] transition-all duration-300 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-surface)]/80 dark:text-[var(--color-night-text-secondary)] dark:hover:border-blue-300 dark:hover:text-blue-300"
+      aria-label="Toggle theme"
     >
-      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+      {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
     </button>
   );
-};
+}
 
-// =============================================================================
-// NAV LINKS
-// =============================================================================
-
-const navLinks = [
-  { nameEn: "Portfolio",   nameFr: "Portfolio",   href: "#works",      section: "works"      },
-  { nameEn: "Stack",       nameFr: "Stack",        href: "#skills",     section: "skills"     },
-  { nameEn: "Experience",  nameFr: "Expérience",   href: "#experience", section: "experience" },
-  { nameEn: "Contact",     nameFr: "Contact",      href: "#contact",    section: "contact"    },
-];
-
-// =============================================================================
-// NAVBAR
-// =============================================================================
+function LogoMark() {
+  return (
+    <div className="relative h-11 w-11 overflow-hidden rounded-full">
+      <Image
+        src="/logo-my.svg"
+        alt="Masmoud Yacoubou"
+        fill
+        priority
+        className="object-contain"
+        sizes="44px"
+      />
+    </div>
+  );
+}
 
 export default function Navbar() {
-  const [isOpen, setIsOpen]         = useState(false);
-  const [scrolled, setScrolled]     = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const pathname = usePathname();
-  const router   = useRouter();
+  const router = useRouter();
 
-  const isEn      = pathname.startsWith("/en");
+  const isEn = pathname.startsWith("/en");
+  const localeRoot = `/${isEn ? "en" : "fr"}`;
   const isHomePage = pathname === "/fr" || pathname === "/en";
 
-  // ---- Scroll handler ----
-  const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 20);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  // ---- Détection section active via IntersectionObserver ----
-  useEffect(() => {
     if (!isHomePage) return;
 
-    const sectionIds = navLinks.map((l) => l.section);
     const observers: IntersectionObserver[] = [];
-
-    // Map pour tracker quelles sections sont visibles
     const visibilityMap: Record<string, number> = {};
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
+    for (const link of navLinks) {
+      const el = document.getElementById(link.section);
+      if (!el) continue;
 
       const observer = new IntersectionObserver(
         ([entry]) => {
-          visibilityMap[id] = entry.intersectionRatio;
-
-          // La section active est celle avec le plus grand ratio visible
+          visibilityMap[link.section] = entry.intersectionRatio;
           const mostVisible = Object.entries(visibilityMap).reduce(
             (best, [key, ratio]) => (ratio > best.ratio ? { id: key, ratio } : best),
             { id: "", ratio: 0 }
           );
-
-          if (mostVisible.ratio > 0) {
-            setActiveSection(mostVisible.id);
-          }
+          if (mostVisible.ratio > 0) setActiveSection(mostVisible.id);
         },
         {
-          threshold:  [0, 0.1, 0.25, 0.5, 0.75],
-          rootMargin: "-10% 0px -10% 0px",
+          threshold: [0, 0.15, 0.35, 0.55, 0.75],
+          rootMargin: "-15% 0px -22% 0px",
         }
       );
 
       observer.observe(el);
       observers.push(observer);
-    });
+    }
 
     return () => observers.forEach((o) => o.disconnect());
   }, [isHomePage]);
 
-  // ---- Fermer menu au changement de page ----
-useEffect(() => {
-  const timer = setTimeout(() => setIsOpen(false), 0);
-  return () => clearTimeout(timer);
-}, [pathname]);
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
-// ---- Bloquer scroll quand menu ouvert ----
-useEffect(() => {
-  const timer = setTimeout(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "unset";
-  }, 0);
-  return () => clearTimeout(timer);
-}, [isOpen]);
-
-  const toggleLanguage = () => {
+  function toggleLanguage() {
     setIsOpen(false);
-    const segments  = pathname.split("/");
-    segments[1]     = isEn ? "fr" : "en";
+    const segments = pathname.split("/");
+    segments[1] = isEn ? "fr" : "en";
     router.push(segments.join("/"));
-  };
+  }
+
+  function getNavHref(href: string) {
+    return isHomePage ? href : `${localeRoot}/${href}`;
+  }
 
   return (
-    <header className="fixed top-0 w-full z-[100] transition-all duration-500 px-4 py-4 pointer-events-none">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-[100] px-3 pt-3 sm:px-4 sm:pt-4">
       <motion.nav
-        initial={{ y: -20, opacity: 0 }}
+        initial={{ y: -16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 rounded-full transition-all duration-300 border pointer-events-auto
-          ${scrolled
-            ? "h-14 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-slate-200 dark:border-white/10 shadow-lg"
-            : "h-20 bg-transparent border-transparent"
-          }`}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        className={`pointer-events-auto mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border px-3 py-2.5 transition-all duration-300 sm:px-4 ${
+          scrolled
+            ? "border-[var(--color-light-border)] bg-[var(--color-light-bg)]/92 shadow-[0_18px_54px_-42px_rgba(15,23,42,0.4)] backdrop-blur-xl dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-bg)]/88"
+            : "border-transparent bg-transparent"
+        }`}
       >
-        {/* LOGO */}
-        {/* LOGO */}
-<Link href={`/${isEn ? "en" : "fr"}`} className="group flex items-center gap-2">
-  {/* Logo SVG — cohérent avec le favicon */}
-  <div className="w-8 h-8 sm:w-9 sm:h-9 transition-transform group-hover:rotate-12">
-    <svg
-      viewBox="0 0 512 512"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
-    >
-      <rect width="512" height="512" rx="80" fill="#2563eb"/>
-      <rect x="88" y="136" width="56" height="256" rx="5" fill="white"/>
-      <rect x="368" y="136" width="56" height="256" rx="5" fill="white"/>
-      <polygon points="88,136 144,136 256,294 204,294" fill="white"/>
-      <polygon points="368,136 424,136 308,294 256,294" fill="white"/>
-      <circle cx="256" cy="426" r="16" fill="white" opacity="0.9"/>
-      <circle cx="256" cy="426" r="8" fill="#2563eb"/>
-      <rect x="88" y="452" width="336" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
-    </svg>
-  </div>
-  <span className="font-montserrat font-black text-lg sm:text-xl tracking-tighter uppercase dark:text-white">
-    Y<span className="text-blue-600">.</span>
-  </span>
-</Link>
-        {/* <Link href={`/${isEn ? "en" : "fr"}`} className="group flex items-center gap-2">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-montserrat font-black text-sm transition-transform group-hover:rotate-12 shadow-lg shadow-blue-600/20">
-            M
-          </div>
-          <span className="font-montserrat font-black text-lg sm:text-xl tracking-tighter uppercase dark:text-white">
-            Y<span className="text-blue-600">.</span>
-          </span>
-        </Link> */}
+        {/* Logo + name */}
+        <Link href={localeRoot} className="group flex min-w-0 items-center gap-3">
+          <LogoMark />
+        </Link>
 
-        {/* DESKTOP NAV */}
-        <div className="hidden md:flex items-center space-x-8 text-[10px] font-montserrat font-black uppercase tracking-[0.2em]">
+        {/* Desktop nav links */}
+        <div className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => {
             const isActive = isHomePage && activeSection === link.section;
             return (
               <Link
                 key={link.href}
-                href={link.href}
-                className={`relative group transition-colors duration-200 ${
+                href={getNavHref(link.href)}
+                className={`relative text-[10px] font-black uppercase tracking-[0.18em] transition-colors duration-300 ${
                   isActive
-                    ? "text-blue-600"
-                    : "text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
+                    ? "text-[var(--color-accent)] dark:text-blue-300"
+                    : "text-[var(--color-light-text-secondary)] hover:text-[var(--color-light-text-primary)] dark:text-[var(--color-night-text-secondary)] dark:hover:text-[var(--color-night-text-primary)]"
                 }`}
               >
                 {isEn ? link.nameEn : link.nameFr}
-
-                {/* Indicateur actif */}
-                <span
-                  className={`absolute -bottom-1 left-0 h-[2px] bg-blue-600 transition-all duration-300 ${
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                />
-
-                {/* Point indicateur sous le lien actif */}
                 {isActive && (
                   <motion.span
-                    layoutId="activeNavDot"
-                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    layoutId="nav-line"
+                    className="absolute -bottom-2 left-0 h-px w-full bg-[var(--color-accent)] dark:bg-blue-300"
+                    transition={{ type: "spring", stiffness: 320, damping: 28 }}
                   />
                 )}
               </Link>
@@ -214,76 +165,93 @@ useEffect(() => {
           })}
         </div>
 
-        {/* CONTROLS */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right actions */}
+        <div className="flex items-center gap-2">
+          {/* Language switcher — desktop */}
           <button
             onClick={toggleLanguage}
-            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 dark:border-white/10 hover:border-blue-600 transition-all active:scale-95 group bg-white/50 dark:bg-transparent"
+            className="hidden items-center gap-2 rounded-full border border-[var(--color-light-border)] bg-[var(--color-light-surface)]/80 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[var(--color-light-text-secondary)] transition-all duration-300 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-surface)]/80 dark:text-[var(--color-night-text-secondary)] dark:hover:border-blue-300 dark:hover:text-blue-300 sm:flex"
+            type="button"
           >
-            <Languages size={14} className="text-blue-600" />
-            <span className="font-montserrat font-black text-[10px] tracking-widest group-hover:text-blue-600 uppercase">
-              {isEn ? "EN" : "FR"}
-            </span>
+            <Languages size={14} />
+            {isEn ? "EN" : "FR"}
           </button>
 
           <ThemeSwitcher />
 
+          {/* Hamburger */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-all active:scale-90 shadow-lg z-[110]"
+            onClick={() => setIsOpen((v) => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-light-border)] bg-[var(--color-light-surface)]/80 text-[var(--color-light-text-primary)] transition-all duration-300 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-surface)]/80 dark:text-[var(--color-night-text-primary)] dark:hover:border-blue-300 md:hidden"
             aria-label="Menu"
+            type="button"
           >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
+            {isOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* Mobile drawer */}
         <AnimatePresence>
           {isOpen && (
             <>
+              {/* Backdrop */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsOpen(false)}
-                className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur-sm z-[101] md:hidden"
+                className="fixed inset-0 bg-[var(--color-light-text-primary)]/25 backdrop-blur-sm dark:bg-[var(--color-night-bg)]/60 md:hidden"
               />
+
+              {/* Panel */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: -20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                className="absolute top-[110%] left-0 w-full bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-white/10 rounded-[2rem] overflow-hidden p-8 shadow-2xl md:hidden flex flex-col gap-6 z-[102]"
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-x-0 top-[calc(100%+10px)] rounded-[26px] border border-[var(--color-light-border)] bg-[var(--color-light-bg)] p-4 shadow-[0_24px_70px_-38px_rgba(15,23,42,0.38)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-bg)] md:hidden"
               >
-                {navLinks.map((link) => {
-                  const isActive = isHomePage && activeSection === link.section;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`text-4xl font-montserrat font-black uppercase tracking-tighter transition-colors italic leading-none flex items-center gap-4 ${
-                        isActive ? "text-blue-600" : "hover:text-blue-600"
-                      }`}
-                    >
-                      {isEn ? link.nameEn : link.nameFr}
-                      {/* Point indicateur mobile */}
-                      {isActive && (
-                        <span className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 mt-1" />
-                      )}
-                    </Link>
-                  );
-                })}
+                {/* Drawer header */}
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <div>
+                    <div className="font-heading text-xs font-black uppercase tracking-[0.22em] text-[var(--color-light-text-primary)] dark:text-[var(--color-night-text-primary)]">
+                      Navigation
+                    </div>
+                    <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-light-text-secondary)] dark:text-[var(--color-night-text-secondary)]">
+                      Portfolio public
+                    </div>
+                  </div>
 
-                <div className="h-px w-full bg-slate-100 dark:bg-white/5 mt-2" />
-
-                <div className="flex items-center justify-between">
                   <button
                     onClick={toggleLanguage}
-                    className="flex items-center gap-3 font-montserrat font-black text-[10px] uppercase tracking-widest text-blue-600 p-2 border border-blue-600/20 rounded-xl"
+                    className="flex items-center gap-2 rounded-full border border-[var(--color-light-border)] bg-[var(--color-light-surface)] px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-[var(--color-light-text-secondary)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-surface)] dark:text-[var(--color-night-text-secondary)]"
+                    type="button"
                   >
-                    <Languages size={16} />
-                    {isEn ? "Switch to Français" : "Passer en Anglais"}
+                    <Languages size={14} />
+                    {isEn ? "Français" : "English"}
                   </button>
+                </div>
+
+                {/* Nav items */}
+                <div className="grid gap-2">
+                  {navLinks.map((link) => {
+                    const isActive = isHomePage && activeSection === link.section;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={getNavHref(link.href)}
+                        onClick={() => setIsOpen(false)}
+                        className={`flex items-center justify-between rounded-2xl border px-4 py-4 text-sm font-black uppercase tracking-[0.16em] transition-all ${
+                          isActive
+                            ? "border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 text-[var(--color-light-text-primary)] dark:text-[var(--color-night-text-primary)]"
+                            : "border-[var(--color-light-border)] bg-[var(--color-light-surface)]/70 text-[var(--color-light-text-secondary)] hover:text-[var(--color-light-text-primary)] dark:border-[var(--color-night-border)] dark:bg-[var(--color-night-surface-soft)] dark:text-[var(--color-night-text-secondary)] dark:hover:text-[var(--color-night-text-primary)]"
+                        }`}
+                      >
+                        <span>{isEn ? link.nameEn : link.nameFr}</span>
+                        <ArrowUpRight size={16} />
+                      </Link>
+                    );
+                  })}
                 </div>
               </motion.div>
             </>

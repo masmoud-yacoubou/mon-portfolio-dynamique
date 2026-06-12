@@ -1,18 +1,18 @@
 // src/app/(website)/[locale]/project/[slug]/page.tsx
-// =============================================================================
-// PAGE DÉTAIL PROJET - Portfolio Public
-// Direction : Premium épuré — cohérent avec HomeClient
-// =============================================================================
 
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Github, Globe, Box } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Github, Globe, Box } from "lucide-react";
 import type { Metadata } from "next";
-
-
-const baseUrl = "https://masmoud-yacoubou.vercel.app";
+import {
+  getLanguageAlternates,
+  getLocaleMeta,
+  getLocalizedUrl,
+  isValidLocale,
+  siteConfig,
+} from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -20,41 +20,40 @@ export async function generateMetadata({
   params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
   const { slug, locale } = await params;
+  if (!isValidLocale(locale)) return {};
+
   const isEn = locale === "en";
+  const localeMeta = getLocaleMeta(locale);
 
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) return {};
 
-  const title       = isEn && project.title_en ? project.title_en : project.title;
-  const description = isEn && project.description_en
-    ? project.description_en
-    : project.description;
+  const title = isEn && project.title_en ? project.title_en : project.title;
+  const description =
+    isEn && project.description_en ? project.description_en : project.description;
 
   return {
     title,
     description,
     alternates: {
-      canonical: `${baseUrl}/${locale}/project/${slug}`,
-      languages: {
-        "fr":      `${baseUrl}/fr/project/${slug}`,
-        "en":      `${baseUrl}/en/project/${slug}`,
-        "x-default": `${baseUrl}/fr/project/${slug}`,
-      },
+      canonical: getLocalizedUrl(locale, `project/${slug}`),
+      languages: getLanguageAlternates(`project/${slug}`),
     },
     openGraph: {
       title,
       description,
-      url:    `${baseUrl}/${locale}/project/${slug}`,
+      url: getLocalizedUrl(locale, `project/${slug}`),
+      locale: localeMeta.ogLocale,
       images: project.imageUrl
         ? [{ url: project.imageUrl, width: 1200, height: 630, alt: title }]
-        : [`${baseUrl}/og-image.png`],
+        : [{ url: `${siteConfig.url}/og-image.png`, width: 1200, height: 630, alt: title }],
       type: "article",
     },
     twitter: {
-      card:        "summary_large_image",
+      card: "summary_large_image",
       title,
       description,
-      images:      project.imageUrl ? [project.imageUrl] : [`${baseUrl}/og-image.png`],
+      images: project.imageUrl ? [project.imageUrl] : [`${siteConfig.url}/og-image.png`],
     },
   };
 }
@@ -71,99 +70,106 @@ async function getProject(slug: string) {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug, locale } = await params;
+  if (!isValidLocale(locale)) notFound();
 
-  const activeLocale = (locale === "en" || locale === "fr") ? locale : "fr";
-  const isEn = activeLocale === "en";
-
+  const isEn = locale === "en";
   const project = await getProject(slug);
 
-  return (
-    <main className="min-h-screen bg-white dark:bg-[#080808] text-black dark:text-white">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-16 pt-28 pb-20">
+  const title = isEn && project.title_en ? project.title_en : project.title;
+  const description =
+    isEn && project.description_en ? project.description_en : project.description;
 
-        {/* Retour */}
+  return (
+    <main className="min-h-screen bg-[#f7f3ea] text-slate-950 dark:bg-[#09090b] dark:text-white">
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-28 sm:px-8 sm:pt-32 lg:px-14">
         <Link
-          href={`/${activeLocale}`}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-blue-600 transition-colors mb-12 group"
+          href={`/${locale}/projects`}
+          className="group mb-10 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-300"
         >
-          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-          {isEn ? "Back to works" : "Retour aux projets"}
+          <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+          {isEn ? "Back to archive" : "Retour aux projets"}
         </Link>
 
-        {/* En-tête */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-12">
-          <div className="flex-1">
-            <p className="text-xs font-semibold text-blue-600 tracking-wide mb-3">
+        <header className="mb-10 border-b border-slate-300/70 pb-8 dark:border-white/10">
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <span className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-600 dark:text-blue-300">
+              {project.featured ? (isEn ? "Featured project" : "Projet sélectionné") : "Project"}
+            </span>
+
+            <span className="h-px w-8 bg-slate-300 dark:bg-white/15" />
+
+            <span className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 dark:text-slate-500">
               {new Date(project.createdAt).getFullYear()}
-            </p>
-            <h1 className="font-montserrat text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-[1.0]">
-              {isEn && project.title_en ? project.title_en : project.title}
-            </h1>
+            </span>
           </div>
-          <div className="h-px w-16 bg-blue-600 self-end mb-2 hidden sm:block" />
-        </div>
 
-        {/* Image ou Vidéo principale */}
-{project.videoUrl ? (
-  <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 border border-slate-100 dark:border-zinc-900">
-    <video
-      src={project.videoUrl}
-      controls
-      className="w-full h-full object-cover"
-    />
-  </div>
-) : project.imageUrl ? (
-  <div className="relative aspect-[16/9] w-full overflow-hidden mb-16 border border-slate-100 dark:border-zinc-900">
-    <Image
-      src={project.imageUrl}
-      alt={project.title}
-      fill
-      className="object-cover"
-      priority
-      quality={85}                          // ← 85 = meilleur ratio qualité/poids
-      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-      placeholder="blur"                    // ← Flou pendant le chargement
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+          <div className="grid gap-6 lg:grid-cols-[1fr_0.42fr] lg:items-end">
+            <h1 className="font-montserrat text-4xl font-black uppercase leading-[0.95] tracking-[-0.065em] sm:text-6xl lg:text-7xl">
+              {title}
+            </h1>
 
-    />
-  </div>
-) : null}
+            <p className="max-w-md text-sm leading-7 text-slate-600 dark:text-slate-300">
+              {description}
+            </p>
+          </div>
+        </header>
 
-        {/* Contenu */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <section className="mb-12">
+          {project.videoUrl ? (
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[24px] border border-slate-300/70 bg-slate-200 shadow-[0_28px_80px_-62px_rgba(15,23,42,0.45)] dark:border-white/10 dark:bg-white/[0.04]">
+              <video
+                suppressHydrationWarning
+                src={project.videoUrl}
+                controls
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : project.imageUrl ? (
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[24px] border border-slate-300/70 bg-slate-200 shadow-[0_28px_80px_-62px_rgba(15,23,42,0.45)] dark:border-white/10 dark:bg-white/[0.04]">
+              <Image
+                src={project.imageUrl}
+                alt={title}
+                fill
+                className="object-cover"
+                priority
+                quality={90}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1100px"
+              />
+            </div>
+          ) : null}
+        </section>
 
-          {/* Description */}
-          <div className="lg:col-span-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-px w-6 bg-blue-600 flex-shrink-0" />
-              <p className="text-xs font-semibold text-blue-600 tracking-wide">
-                Description
+        <section className="grid gap-10 lg:grid-cols-[1fr_330px] lg:gap-14">
+          <article>
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-8 bg-blue-600 dark:bg-blue-300" />
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-600 dark:text-blue-300">
+                {isEn ? "Overview" : "Description"}
               </p>
             </div>
-            <p className="text-base text-slate-500 dark:text-zinc-400 leading-relaxed">
-              {isEn && project.description_en
-                ? project.description_en
-                : project.description}
-            </p>
-          </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-4 space-y-10">
+            <div className="max-w-3xl space-y-5 text-sm leading-8 text-slate-600 dark:text-slate-300">
+              {description.split(/\n+/).map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </article>
 
-            {/* Technologies */}
+          <aside className="space-y-8">
             {project.technologies.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-5 pb-4 border-b border-slate-100 dark:border-zinc-900">
-                  <Box size={13} className="text-blue-600 flex-shrink-0" />
-                  <p className="text-xs font-semibold text-slate-500 dark:text-zinc-400 tracking-wide">
+              <div className="border-t border-slate-300/70 pt-6 dark:border-white/10">
+                <div className="mb-5 flex items-center gap-2">
+                  <Box size={14} className="text-blue-600 dark:text-blue-300" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
                     Stack technique
                   </p>
                 </div>
+
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="text-xs font-medium px-3 py-1.5 bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 text-slate-600 dark:text-zinc-400"
+                      className="rounded-full border border-slate-300/80 bg-white/35 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-400"
                     >
                       {tech}
                     </span>
@@ -172,62 +178,59 @@ export default async function ProjectPage({ params }: Props) {
               </div>
             )}
 
-            {/* Liens */}
-            <div className="flex flex-col gap-3">
+            <div className="space-y-3 border-t border-slate-300/70 pt-6 dark:border-white/10">
               {project.link && (
                 <a
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative w-full py-3.5 bg-blue-600 text-white text-xs font-bold tracking-wide flex items-center justify-center gap-2.5 overflow-hidden transition-all"
+                  className="group inline-flex w-full items-center justify-center gap-3 rounded-[8px] bg-blue-600 px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all duration-500 hover:bg-slate-950 dark:hover:bg-blue-300 dark:hover:text-slate-950"
                 >
-                  <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <Globe size={14} className="relative z-10" />
-                  <span className="relative z-10">
-                    {isEn ? "Live project" : "Voir le projet"}
-                  </span>
+                  <Globe size={14} />
+                  {isEn ? "Live project" : "Voir le projet"}
+                  <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               )}
+
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group w-full py-3.5 border border-slate-200 dark:border-zinc-800 text-xs font-bold tracking-wide flex items-center justify-center gap-2.5 hover:border-blue-600 hover:text-blue-600 transition-all"
+                  className="group inline-flex w-full items-center justify-center gap-3 rounded-[8px] border border-slate-300/90 bg-white/35 px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.18em] text-slate-800 transition-all duration-500 hover:border-blue-600 hover:text-blue-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-200 dark:hover:border-blue-300 dark:hover:text-blue-300"
                 >
                   <Github size={14} />
                   Repository
+                  <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               )}
             </div>
-          </div>
-        </div>
+          </aside>
+        </section>
       </div>
-      {/* JSON-LD — Données structurées projet */}
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context":    "https://schema.org",
-      "@type":       "CreativeWork",
-      name:          isEn && project.title_en ? project.title_en : project.title,
-      description:   isEn && project.description_en
-                       ? project.description_en
-                       : project.description,
-      url:           `https://masmoud-yacoubou.vercel.app/${activeLocale}/project/${project.slug}`,
-      image:         project.imageUrl ?? undefined,
-      dateCreated:   project.createdAt,
-      dateModified:  project.updatedAt,
-      author: {
-        "@type": "Person",
-        name:    "Masmoud Yacoubou",
-        url:     "https://masmoud-yacoubou.vercel.app",
-      },
-      keywords: project.technologies.join(", "),
-      ...(project.link && { sameAs: project.link }),
-    }),
-  }}
-/>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: title,
+            description,
+            url: getLocalizedUrl(locale, `project/${project.slug}`),
+            image: project.imageUrl ?? undefined,
+            dateCreated: project.createdAt,
+            dateModified: project.updatedAt,
+            author: {
+              "@type": "Person",
+              name: siteConfig.name,
+              url: siteConfig.url,
+            },
+            keywords: project.technologies.join(", "),
+            ...(project.link && { sameAs: project.link }),
+          }),
+        }}
+      />
     </main>
   );
 }

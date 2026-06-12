@@ -47,9 +47,11 @@ export async function POST(request: NextRequest) {
     });
 
     // ← Invalide le cache des pages concernées
-    revalidatePath("/dashboard/projects");
-    revalidatePath("/fr");
-    revalidatePath("/en");
+revalidatePath("/dashboard/projects");
+revalidatePath("/fr");
+revalidatePath("/en");
+revalidatePath("/fr/projects");
+revalidatePath("/en/projects");
 
     return NextResponse.json(project, { status: 201 });
 

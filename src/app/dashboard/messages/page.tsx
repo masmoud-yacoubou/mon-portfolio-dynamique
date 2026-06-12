@@ -146,7 +146,7 @@ export default async function MessagesPage() {
                 <MarkReadButton id={message.id} isRead={message.read} />
 
                 {/* Supprimer */}
-                <DeleteButton id={message.id} name={`le message de ${message.name}`} type="experience" />
+                <DeleteButton id={message.id} name={`le message de ${message.name}`} type="message" />
               </div>
             </div>
           ))}

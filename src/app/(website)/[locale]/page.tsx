@@ -8,6 +8,8 @@
 import prisma from "@/lib/prisma";
 import HomeClient from "@/components/HomeClient";
 import { getDictionary } from "@/dictionaries/get-dictionary";
+import { notFound } from "next/navigation";
+import { isValidLocale } from "@/lib/site";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -33,16 +35,14 @@ async function getPortfolioData() {
 }
 
 export default async function Page({ params }: Props) {
-  // Résolution des paramètres de route (Next.js 15+)
   const { locale } = await params;
+  if (!isValidLocale(locale)) {
+    notFound();
+  }
 
-  // Sécurité locale (fallback sur 'fr')
-  const activeLocale = (locale === "en" || locale === "fr") ? locale : "fr";
-
-  // Chargement parallèle des données Prisma et du dictionnaire
   const [{ projects, skills, experiences }, dict] = await Promise.all([
     getPortfolioData(),
-    getDictionary(activeLocale),
+    getDictionary(locale),
   ]);
 
   return (
@@ -50,7 +50,7 @@ export default async function Page({ params }: Props) {
       projects={projects}
       skills={skills}
       experiences={experiences}
-      activeLocale={activeLocale}
+      activeLocale={locale}
       dict={dict}
     />
   );

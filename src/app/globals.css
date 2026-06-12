@@ -1,51 +1,149 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: var(--font-poppins);
   --font-heading: var(--font-montserrat);
-  
-  --color-accent: #3b82f6;
-  --color-night: #050505;
+
+  --color-accent: #2563eb;
+
+  --color-light-bg: #f7f3ea;
+  --color-light-surface: #ffffff;
+  --color-light-border: #e2e8f0;
+  --color-light-text-primary: #0f172a;
+  --color-light-text-secondary: #475569;
+
+  --color-night-bg: #050505;
+  --color-night-surface: #0d0d0f;
+  --color-night-surface-soft: #121216;
+  --color-night-border: #242428;
+  --color-night-text-primary: #f8fafc;
+  --color-night-text-secondary: #a1a1aa;
 }
 
-body {
-  @apply transition-colors duration-500;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased;
+    background-color: var(--color-light-bg);
+    color: var(--color-light-text-primary);
+  }
+
+  .dark body {
+    background-color: var(--color-night-bg);
+    color: var(--color-night-text-primary);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.025;
+    background-image:
+      linear-gradient(rgba(15, 23, 42, 0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.22) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: linear-gradient(to bottom, black, transparent 82%);
+  }
+
+  .dark body::before {
+    opacity: 0.018;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-montserrat);
+  }
+
+  section[id] {
+    scroll-margin-top: 110px;
+  }
 }
 
-/* Effet de grain subtil pour le côté Premium */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  opacity: 0.03;
-  pointer-events: none;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  z-index: 50;
-}
-
-h1, h2, h3 {
-  font-family: var(--font-montserrat);
-}
-/* --- EFFETS DE TEXTE (OPTIONNEL) --- */
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-400;
+  @apply bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent;
 }
 
-/* --- CORRECTION POUR PORTABLE TEXT (PROSE) --- */
-/* Pour que tes descriptions Sanity respectent le mode sombre */
+.dark .text-gradient {
+  @apply from-blue-400 via-blue-300 to-cyan-400;
+}
+
 .prose {
-  @apply max-w-none text-slate-600 dark:text-slate-400;
+  @apply max-w-none;
+  color: var(--color-light-text-secondary);
+}
+
+.dark .prose {
+  color: var(--color-night-text-secondary);
 }
 
 .prose strong {
-  @apply text-slate-900 dark:text-white font-bold;
+  font-weight: 700;
+  color: var(--color-light-text-primary);
 }
 
-/* --- PERSONNALISATION DE LA BARRE DE DÉFILEMENT --- */
+.dark .prose strong {
+  color: var(--color-night-text-primary);
+}
+
+/* Surfaces premium */
+.premium-card {
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(203, 213, 225, 0.75);
+}
+
+.premium-card:hover {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(37, 99, 235, 0.38);
+}
+
+.dark .premium-card {
+  background: rgba(13, 13, 15, 0.86);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.dark .premium-card:hover {
+  background:
+    linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(13, 13, 15, 0.94)),
+    rgba(13, 13, 15, 0.94);
+  border-color: rgba(147, 197, 253, 0.28);
+  box-shadow: 0 24px 70px -55px rgba(37, 99, 235, 0.5);
+}
+
+.premium-surface {
+  background: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(203, 213, 225, 0.7);
+}
+
+.dark .premium-surface {
+  background: rgba(18, 18, 22, 0.78);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.premium-pill {
+  border: 1px solid rgba(203, 213, 225, 0.75);
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.dark .premium-pill {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.dark .premium-hover-blue:hover {
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.32);
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -55,41 +153,5 @@ h1, h2, h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-blue-500 transition-colors;
-}
-@import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
-
-@theme {
-  --font-sans: var(--font-poppins);
-  --font-heading: var(--font-montserrat);
-  --color-brand: #3b82f6;
-}
-
-body {
-  @apply bg-white dark:bg-[#020202] transition-colors duration-700;
-}
-
-/* Animation de l'Aura en arrière-plan */
-.bg-aura {
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 100vw; height: 100vh;
-  background: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.08), transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-@layer base {
-  html {
-    /* Défilement doux pour tout le site */
-    scroll-behavior: smooth;
-  }
-
-  /* Ajustement pour la Navbar fixe */
-  /* Empêche le titre de la section d'être caché sous la Navbar */
-  section[id] {
-    scroll-margin-top: 100px;
-  }
+  @apply rounded-full bg-slate-300 transition-colors hover:bg-blue-600 dark:bg-zinc-800 dark:hover:bg-blue-500;
 }

@@ -39,6 +39,7 @@ export default function EditSkillForm({ skill }: { skill: Skill }) {
     name:     skill.name,
     level:    skill.level,
     category: skill.category,
+    iconUrl: skill.iconUrl ?? "",
     order:    skill.order,
   });
 
@@ -89,6 +90,19 @@ export default function EditSkillForm({ skill }: { skill: Skill }) {
             ))}
           </select>
         </Field>
+
+        <Field
+  label="Icône"
+  hint="URL de l’icône. Utilise de préférence une URL Cloudinary."
+>
+  <input
+    type="url"
+    value={form.iconUrl}
+    onChange={(e) => updateField("iconUrl", e.target.value)}
+    placeholder="https://res.cloudinary.com/..."
+    className={inputClass}
+  />
+</Field>
 
         <Field label={`Niveau — ${form.level}%`} hint="Déplace le curseur pour ajuster">
           <div className="space-y-3">

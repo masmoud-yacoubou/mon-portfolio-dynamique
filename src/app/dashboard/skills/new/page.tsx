@@ -53,10 +53,11 @@ function Field({
 }
 
 interface SkillFormData {
-  name:     string;
-  level:    number;
+  name: string;
+  level: number;
   category: string;
-  order:    number;
+  iconUrl: string;
+  order: number;
 }
 
 export default function NewSkillPage() {
@@ -64,12 +65,13 @@ export default function NewSkillPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError]         = useState("");
 
-  const [form, setForm] = useState<SkillFormData>({
-    name:     "",
-    level:    80,
-    category: "Frontend",
-    order:    0,
-  });
+const [form, setForm] = useState<SkillFormData>({
+  name: "",
+  level: 80,
+  category: "Frontend",
+  iconUrl: "",
+  order: 0,
+});
 
   function updateField<K extends keyof SkillFormData>(key: K, value: SkillFormData[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -134,6 +136,20 @@ export default function NewSkillPage() {
               className={inputClass}
             />
           </Field>
+
+          {/* Icône */}
+<Field
+  label="Icône"
+  hint="URL de l’icône. Utilise de préférence une URL Cloudinary."
+>
+  <input
+    type="url"
+    value={form.iconUrl}
+    onChange={(e) => updateField("iconUrl", e.target.value)}
+    placeholder="https://res.cloudinary.com/..."
+    className={inputClass}
+  />
+</Field>
 
           {/* Catégorie */}
           <Field label="Catégorie" required>

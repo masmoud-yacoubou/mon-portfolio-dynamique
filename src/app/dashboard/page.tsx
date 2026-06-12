@@ -1,19 +1,11 @@
 // src/app/dashboard/page.tsx
-// =============================================================================
-// PAGE D'ACCUEIL - Dashboard
-// Description : Vue d'ensemble avec les statistiques principales.
-//               Affiche le nombre de projets, skills, expériences et messages.
-// =============================================================================
 
 export const dynamic = "force-dynamic";
 
-import {  FolderKanban, Wrench, Briefcase, MessageSquare } from "lucide-react";
+import { FolderKanban, Wrench, Briefcase, MessageSquare, ArrowUpRight } from "lucide-react";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-/**
- * Récupère les statistiques depuis la base de données
- */
 async function getStats() {
   const [projects, skills, experiences, messages, unreadMessages] =
     await Promise.all([
@@ -27,7 +19,6 @@ async function getStats() {
   return { projects, skills, experiences, messages, unreadMessages };
 }
 
-// ---- Carte de statistique ----
 function StatCard({
   label,
   value,
@@ -44,26 +35,28 @@ function StatCard({
   return (
     <Link
       href={href}
-      className="group relative bg-white dark:bg-[#050505] border border-slate-100 dark:border-zinc-900 p-6 hover:border-blue-600 transition-all duration-300"
+      className="group relative rounded-[22px] border border-slate-200/80 bg-white/70 p-5 transition-colors duration-300 hover:border-blue-500/40 hover:bg-white dark:border-white/10 dark:bg-white/[0.035] dark:hover:border-blue-300/35"
     >
-      {/* Badge messages non lus */}
       {badge ? (
-        <span className="absolute top-4 right-4 bg-blue-600 text-white text-[9px] font-black px-2 py-1 uppercase tracking-widest">
+        <span className="absolute right-4 top-4 rounded-full bg-blue-600 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em] text-white">
           {badge} nouveau{badge > 1 ? "x" : ""}
         </span>
       ) : null}
 
-      <div className="flex items-start justify-between mb-6">
-        <div className="text-blue-600">{icon}</div>
-        <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 dark:text-zinc-700 group-hover:text-blue-600 transition-colors">
-          Gérer →
+      <div className="mb-6 flex items-start justify-between">
+        <div className="text-blue-600 dark:text-blue-300">{icon}</div>
+
+        <span className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.18em] text-slate-400 transition-colors group-hover:text-blue-600 dark:text-zinc-600 dark:group-hover:text-blue-300">
+          Gérer
+          <ArrowUpRight size={12} />
         </span>
       </div>
 
-      <div className="font-montserrat text-4xl font-black text-black dark:text-white mb-2">
+      <div className="mb-2 font-montserrat text-4xl font-black tracking-[-0.06em] text-slate-950 dark:text-white">
         {String(value).padStart(2, "0")}
       </div>
-      <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-600">
+
+      <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-zinc-500">
         {label}
       </div>
     </Link>
@@ -73,21 +66,29 @@ function StatCard({
 export default async function DashboardPage() {
   const stats = await getStats();
 
+  const quickLinks = [
+    { label: "Nouveau projet", href: "/dashboard/projects/new" },
+    { label: "Nouvelle compétence", href: "/dashboard/skills/new" },
+    { label: "Nouvelle expérience", href: "/dashboard/experiences/new" },
+  ];
+
   return (
     <div className="space-y-10">
+      <div className="border-b border-slate-200/80 pb-7 dark:border-white/10">
+        <p className="mb-3 text-[10px] font-black uppercase tracking-[0.22em] text-blue-600 dark:text-blue-300">
+          Dashboard
+        </p>
 
-      {/* En-tête de bienvenue */}
-      <div>
-        <h2 className="font-montserrat text-3xl font-black uppercase tracking-tighter text-black dark:text-white mb-2">
-          Bonjour, Masmoud <span className="text-blue-600">.</span>
+        <h2 className="font-montserrat text-3xl font-black uppercase leading-[0.95] tracking-[-0.06em] text-slate-950 dark:text-white sm:text-4xl">
+          Bonjour, Masmoud<span className="text-blue-600 dark:text-blue-300">.</span>
         </h2>
-        <p className="text-sm text-slate-500 dark:text-zinc-500 font-medium">
-          Voici un aperçu de ton portfolio en temps réel.
+
+        <p className="mt-4 max-w-xl text-sm leading-7 text-slate-500 dark:text-zinc-400">
+          Voici un aperçu clair de ton portfolio, de son contenu et des messages reçus.
         </p>
       </div>
 
-      {/* Grille de statistiques */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Projets"
           value={stats.projects}
@@ -115,28 +116,23 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Accès rapides */}
       <div>
-        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-600 mb-4">
+        <h3 className="mb-4 text-[10px] font-black uppercase tracking-[0.22em] text-slate-400 dark:text-zinc-500">
           Accès rapides
         </h3>
+
         <div className="flex flex-wrap gap-3">
-          {[
-            { label: "Nouveau projet", href: "/dashboard/projects/new" },
-            { label: "Nouvelle compétence", href: "/dashboard/skills/new" },
-            { label: "Nouvelle expérience", href: "/dashboard/experiences/new" },
-          ].map((item) => (
+          {quickLinks.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-5 py-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-700 transition-colors duration-300 hover:border-blue-500/40 hover:text-blue-600 dark:border-white/10 dark:bg-white/[0.035] dark:text-zinc-300 dark:hover:border-blue-300/35 dark:hover:text-blue-300"
             >
               + {item.label}
             </Link>
           ))}
         </div>
       </div>
-
     </div>
   );
 }

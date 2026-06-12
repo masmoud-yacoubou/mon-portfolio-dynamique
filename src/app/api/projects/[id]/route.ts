@@ -33,6 +33,24 @@ export async function PUT(
     const existing = await prisma.project.findUnique({ where: { id } });
     if (!existing) return NextResponse.json({ error: "Projet introuvable." }, { status: 404 });
 
+    const nextSlug = body.slug ?? existing.slug;
+
+const slugConflict = await prisma.project.findFirst({
+  where: {
+    slug: nextSlug,
+    NOT: {
+      id,
+    },
+  },
+});
+
+if (slugConflict) {
+  return NextResponse.json(
+    { error: "Un projet avec ce slug existe déjà." },
+    { status: 409 }
+  );
+}
+
     const updated = await prisma.project.update({
       where: { id },
       data: {
@@ -52,11 +70,16 @@ export async function PUT(
     });
 
     revalidatePath("/dashboard/projects");
-    revalidatePath(`/dashboard/projects/${id}/edit`);
-    revalidatePath("/fr");
-    revalidatePath("/en");
-    revalidatePath(`/fr/project/${updated.slug}`);
-    revalidatePath(`/en/project/${updated.slug}`);
+revalidatePath(`/dashboard/projects/${id}/edit`);
+
+revalidatePath("/fr");
+revalidatePath("/en");
+
+revalidatePath("/fr/projects");
+revalidatePath("/en/projects");
+
+revalidatePath(`/fr/project/${updated.slug}`);
+revalidatePath(`/en/project/${updated.slug}`);
 
     return NextResponse.json(updated);
   } catch (error) {
@@ -81,8 +104,12 @@ export async function DELETE(
     await prisma.project.delete({ where: { id } });
 
     revalidatePath("/dashboard/projects");
-    revalidatePath("/fr");
-    revalidatePath("/en");
+
+revalidatePath("/fr");
+revalidatePath("/en");
+
+revalidatePath("/fr/projects");
+revalidatePath("/en/projects");
 
     return NextResponse.json({ message: "Projet supprimé avec succès." }, { status: 200 });
   } catch (error) {
